@@ -28,10 +28,28 @@ class _AuthenState extends State<Authen> {
               buildTitle(),
               buildUser(size),
               buildPassword(size),
+              buildLogin(size),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Row buildLogin(double size) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          margin: EdgeInsets.symmetric(vertical: 15),
+          width: size * 0.6,
+          child: ElevatedButton(
+            style: MyConstant().myButtonStyle(),
+            onPressed: () {},
+            child: Text('Login'),
+          ),
+        ),
+      ],
     );
   }
 
@@ -40,7 +58,7 @@ class _AuthenState extends State<Authen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          margin: EdgeInsets.only(top: 15),
+          margin: EdgeInsets.only(top: 16),
           width: size * 0.6, // กำหนดความกว้างของรูปภาพเป็น 60% ของหน้าจอ
           child: TextFormField(
             obscureText: statusRedEye, // การทำให้เป็นดอกจันทร์
