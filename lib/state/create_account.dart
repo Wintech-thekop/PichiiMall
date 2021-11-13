@@ -21,16 +21,25 @@ class _CreateAccountState extends State<CreateAccount> {
         title: Text('Create new Account'),
         backgroundColor: MyConstant.primary,
       ),
-      body: ListView(
-        padding: EdgeInsets.all(15),
-        children: [
-          buildTitle('ข้อมูลทั่วไป :'),
-          buildName(size),
-          buildTitle('ชนิดของ User :'),
-          buildRadioBuyer(size),
-          buildRadioSeller(size),
-          buildRadioRider(size),
-        ],
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+        behavior: HitTestBehavior.opaque,
+        child: ListView(
+          padding: EdgeInsets.all(15),
+          children: [
+            buildTitle('ข้อมูลทั่วไป :'),
+            buildName(size),
+            buildTitle('ชนิดของ User :'),
+            buildRadioBuyer(size),
+            buildRadioSeller(size),
+            buildRadioRider(size),
+            buildTitle('ข้อมูลพื้นฐาน :'),
+            buildAddress(size),
+            buildPhone(size),
+            buildUser(size),
+            buildPassword(size),
+          ],
+        ),
       ),
     );
   }
@@ -116,6 +125,130 @@ class _CreateAccountState extends State<CreateAccount> {
       ),
     );
   }
+}
+
+Row buildPassword(double size) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Container(
+        margin: EdgeInsets.only(top: 15),
+        width: size * 0.6, // กำหนดความกว้างของรูปภาพเป็น 60% ของหน้าจอ
+        child: TextFormField(
+          decoration: InputDecoration(
+            labelText: 'Password :',
+            labelStyle: MyConstant().h3Style(),
+            prefixIcon: Icon(
+              Icons.lock,
+              color: MyConstant.dark,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: MyConstant.dark),
+              borderRadius: BorderRadius.circular(25),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: MyConstant.light),
+              borderRadius: BorderRadius.circular(25),
+            ),
+          ),
+        ),
+      ),
+    ],
+  );
+}
+
+Row buildUser(double size) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Container(
+        margin: EdgeInsets.only(top: 15),
+        width: size * 0.6, // กำหนดความกว้างของรูปภาพเป็น 60% ของหน้าจอ
+        child: TextFormField(
+          decoration: InputDecoration(
+            labelText: 'User :',
+            labelStyle: MyConstant().h3Style(),
+            prefixIcon: Icon(
+              Icons.perm_identity,
+              color: MyConstant.dark,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: MyConstant.dark),
+              borderRadius: BorderRadius.circular(25),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: MyConstant.light),
+              borderRadius: BorderRadius.circular(25),
+            ),
+          ),
+        ),
+      ),
+    ],
+  );
+}
+
+Row buildPhone(double size) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Container(
+        margin: EdgeInsets.only(top: 15),
+        width: size * 0.6, // กำหนดความกว้างของรูปภาพเป็น 60% ของหน้าจอ
+        child: TextFormField(
+          decoration: InputDecoration(
+            labelText: 'Phone :',
+            labelStyle: MyConstant().h3Style(),
+            prefixIcon: Icon(
+              Icons.phone_iphone_outlined,
+              color: MyConstant.dark,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: MyConstant.dark),
+              borderRadius: BorderRadius.circular(25),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: MyConstant.light),
+              borderRadius: BorderRadius.circular(25),
+            ),
+          ),
+        ),
+      ),
+    ],
+  );
+}
+
+Row buildAddress(double size) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Container(
+        margin: EdgeInsets.only(top: 15),
+        width: size * 0.6, // กำหนดความกว้างของรูปภาพเป็น 60% ของหน้าจอ
+        child: TextFormField(
+          maxLines: 4,
+          decoration: InputDecoration(
+            hintText: 'Address :',
+            hintStyle: MyConstant().h3Style(),
+            prefixIcon: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 60),
+              child: Icon(
+                Icons.home,
+                color: MyConstant.dark,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: MyConstant.dark),
+              borderRadius: BorderRadius.circular(25),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: MyConstant.light),
+              borderRadius: BorderRadius.circular(25),
+            ),
+          ),
+        ),
+      ),
+    ],
+  );
 }
 
 Row buildName(double size) {
