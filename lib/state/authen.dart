@@ -43,15 +43,12 @@ class _AuthenState extends State<Authen> {
       children: [
         ShowTitle(
           title: 'Non Account ? ',
-          textStyle: MyConstant().h2Style(),
+          textStyle: MyConstant().h3Style(),
         ),
         TextButton(
           onPressed: () =>
               Navigator.pushNamed(context, MyConstant.routeCreateAccount),
-          child: Text(
-            'Create Account',
-            style: MyConstant().h1Style(),
-          ),
+          child: Text('Create Account'),
         ),
       ],
     );
