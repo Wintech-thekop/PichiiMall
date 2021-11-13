@@ -50,7 +50,7 @@ class _AuthenState extends State<Authen> {
               Navigator.pushNamed(context, MyConstant.routeCreateAccount),
           child: Text(
             'Create Account',
-            style: MyConstant().h2Style(),
+            style: MyConstant().h1Style(),
           ),
         ),
       ],
