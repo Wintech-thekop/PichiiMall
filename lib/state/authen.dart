@@ -29,10 +29,31 @@ class _AuthenState extends State<Authen> {
               buildUser(size),
               buildPassword(size),
               buildLogin(size),
+              buildCreateAccount(),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Row buildCreateAccount() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ShowTitle(
+          title: 'Non Account ? ',
+          textStyle: MyConstant().h2Style(),
+        ),
+        TextButton(
+          onPressed: () =>
+              Navigator.pushNamed(context, MyConstant.routeCreateAccount),
+          child: Text(
+            'Create Account',
+            style: MyConstant().h2Style(),
+          ),
+        ),
+      ],
     );
   }
 
@@ -150,7 +171,7 @@ class _AuthenState extends State<Authen> {
       children: [
         Container(
           width: size * 0.6, // กำหนดความกว้างของรูปภาพเป็น 60% ของหน้าจอ
-          child: ShowImage(path: MyConstant.image1),
+          child: ShowImage(path: MyConstant.image2),
         ),
       ],
     );
