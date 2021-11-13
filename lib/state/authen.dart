@@ -19,13 +19,17 @@ class _AuthenState extends State<Authen> {
         MediaQuery.of(context).size.width; // เป็นการหาความกว้างตามขนาดหน้าจอ
     return Scaffold(
       body: SafeArea(
-        child: ListView(
-          children: [
-            buildImage(size),
-            buildTitle(),
-            buildUser(size),
-            buildPassword(size),
-          ],
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+          behavior: HitTestBehavior.opaque,
+          child: ListView(
+            children: [
+              buildImage(size),
+              buildTitle(),
+              buildUser(size),
+              buildPassword(size),
+            ],
+          ),
         ),
       ),
     );
