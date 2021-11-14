@@ -23,6 +23,7 @@ class _CreateAccountState extends State<CreateAccount> {
   String? typeUser;
   File? file;
   double? lat, lng;
+  final formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -91,33 +92,47 @@ class _CreateAccountState extends State<CreateAccount> {
         MediaQuery.of(context).size.width; // เป็นการหาความกว้างตามขนาดหน้าจอ
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create new Account'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              if (formKey.currentState!.validate()) {
+                
+              }
+            },
+            icon: Icon(Icons.cloud_upload),
+          ),
+        ],
+        title: Text('Create New Account'),
         backgroundColor: MyConstant.primary,
       ),
       body: GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
         behavior: HitTestBehavior.opaque,
-        child: ListView(
-          padding: EdgeInsets.all(15),
-          children: [
-            buildTitle('ข้อมูลทั่วไป :'),
-            buildName(size),
-            buildTitle('ชนิดของ User :'),
-            buildRadioBuyer(size),
-            buildRadioSeller(size),
-            buildRadioRider(size),
-            buildTitle('ข้อมูลพื้นฐาน :'),
-            buildAddress(size),
-            buildPhone(size),
-            buildUser(size),
-            buildPassword(size),
-            buildTitle('รูปภาพ :'),
-            buildSubTitle(
-                'แสดงรูปภาพของผู้ใช้งาน (หากไม่สะดวกจะแสดงเป็นรูป Default แทน)'),
-            buildAvatar(size),
-            buildTitle('แสดงพิกัดที่คุณอยู่ :'),
-            buildMap(),
-          ],
+        child: Form(
+          key: formKey,
+          child: ListView(
+            // ignore: prefer_const_constructors
+            padding: EdgeInsets.all(15),
+            children: [
+              buildTitle('ข้อมูลทั่วไป :'),
+              buildName(size),
+              buildTitle('ชนิดของ User :'),
+              buildRadioBuyer(size),
+              buildRadioSeller(size),
+              buildRadioRider(size),
+              buildTitle('ข้อมูลพื้นฐาน :'),
+              buildAddress(size),
+              buildPhone(size),
+              buildUser(size),
+              buildPassword(size),
+              buildTitle('รูปภาพ :'),
+              buildSubTitle(
+                  'แสดงรูปภาพของผู้ใช้งาน (หากไม่สะดวกจะแสดงเป็นรูป Default แทน)'),
+              buildAvatar(size),
+              buildTitle('แสดงพิกัดที่คุณอยู่ :'),
+              buildMap(),
+            ],
+          ),
         ),
       ),
     );
@@ -298,6 +313,11 @@ Row buildPassword(double size) {
         margin: EdgeInsets.only(top: 15),
         width: size * 0.6, // กำหนดความกว้างของรูปภาพเป็น 60% ของหน้าจอ
         child: TextFormField(
+          validator: (value) {
+            if (value!.isEmpty) {
+              return 'กรุณากรอก Password ด้วยค่ะ';
+            } else {}
+          },
           decoration: InputDecoration(
             labelText: 'Password :',
             labelStyle: MyConstant().h3Style(),
@@ -311,6 +331,10 @@ Row buildPassword(double size) {
             ),
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: MyConstant.light),
+              borderRadius: BorderRadius.circular(25),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.red),
               borderRadius: BorderRadius.circular(25),
             ),
           ),
@@ -328,6 +352,11 @@ Row buildUser(double size) {
         margin: EdgeInsets.only(top: 15),
         width: size * 0.6, // กำหนดความกว้างของรูปภาพเป็น 60% ของหน้าจอ
         child: TextFormField(
+          validator: (value) {
+            if (value!.isEmpty) {
+              return 'กรุณากรอก User ด้วยค่ะ';
+            } else {}
+          },
           decoration: InputDecoration(
             labelText: 'User :',
             labelStyle: MyConstant().h3Style(),
@@ -341,6 +370,10 @@ Row buildUser(double size) {
             ),
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: MyConstant.light),
+              borderRadius: BorderRadius.circular(25),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.red),
               borderRadius: BorderRadius.circular(25),
             ),
           ),
@@ -358,6 +391,11 @@ Row buildPhone(double size) {
         margin: EdgeInsets.only(top: 15),
         width: size * 0.6, // กำหนดความกว้างของรูปภาพเป็น 60% ของหน้าจอ
         child: TextFormField(
+          validator: (value) {
+            if (value!.isEmpty) {
+              return 'กรุณากรอก Phone ด้วยค่ะ';
+            } else {}
+          },
           decoration: InputDecoration(
             labelText: 'Phone :',
             labelStyle: MyConstant().h3Style(),
@@ -371,6 +409,10 @@ Row buildPhone(double size) {
             ),
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: MyConstant.light),
+              borderRadius: BorderRadius.circular(25),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.red),
               borderRadius: BorderRadius.circular(25),
             ),
           ),
@@ -388,6 +430,11 @@ Row buildAddress(double size) {
         margin: EdgeInsets.only(top: 15),
         width: size * 0.6, // กำหนดความกว้างของรูปภาพเป็น 60% ของหน้าจอ
         child: TextFormField(
+          validator: (value) {
+            if (value!.isEmpty) {
+              return 'กรุณากรอก Address ด้วยค่ะ';
+            } else {}
+          },
           maxLines: 4,
           decoration: InputDecoration(
             hintText: 'Address :',
@@ -407,6 +454,10 @@ Row buildAddress(double size) {
               borderSide: BorderSide(color: MyConstant.light),
               borderRadius: BorderRadius.circular(25),
             ),
+            errorBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.red),
+              borderRadius: BorderRadius.circular(25),
+            ),
           ),
         ),
       ),
@@ -422,6 +473,11 @@ Row buildName(double size) {
         margin: EdgeInsets.only(top: 15),
         width: size * 0.6, // กำหนดความกว้างของรูปภาพเป็น 60% ของหน้าจอ
         child: TextFormField(
+          validator: (value) {
+            if (value!.isEmpty) {
+              return 'กรุณากรอก Name ด้วยค่ะ';
+            } else {}
+          },
           decoration: InputDecoration(
             labelText: 'Name :',
             labelStyle: MyConstant().h3Style(),
@@ -435,6 +491,10 @@ Row buildName(double size) {
             ),
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: MyConstant.light),
+              borderRadius: BorderRadius.circular(25),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.red),
               borderRadius: BorderRadius.circular(25),
             ),
           ),
