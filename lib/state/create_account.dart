@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pichiimall/utility/my_constant.dart';
 import 'package:pichiimall/utility/my_dialog.dart';
@@ -114,7 +115,7 @@ class _CreateAccountState extends State<CreateAccount> {
             buildSubTitle(
                 'แสดงรูปภาพของผู้ใช้งาน (หากไม่สะดวกจะแสดงเป็นรูป Default แทน)'),
             buildAvatar(size),
-            buildTitle('แสดงพิกัดที่คุณอยู่: '),
+            buildTitle('แสดงพิกัดที่คุณอยู่ :'),
             buildMap(),
           ],
         ),
@@ -122,12 +123,33 @@ class _CreateAccountState extends State<CreateAccount> {
     );
   }
 
+  // ignore: prefer_collection_literals
+  Set<Marker> setMarker() => <Marker>[
+        Marker(
+          // ignore: prefer_const_constructors
+          markerId: MarkerId('id'),
+          position: LatLng(lat!, lng!),
+          infoWindow: InfoWindow(
+              title: 'คุณอยู่ที่นี่', snippet: 'Lat = $lat, Lng = $lng'),
+        ),
+      ].toSet();
+
   Widget buildMap() => Container(
-     //   color: Colors.grey,
+        //   color: Colors.grey,
         width: double.infinity,
-        height: 200,
+        height: 300,
         // ignore: prefer_const_constructors
-        child: lat == null ? ShowProgress() : Text('Lat = $lat, Lng = $lng'),
+        child: lat == null
+            // ignore: prefer_const_constructors
+            ? ShowProgress()
+            : GoogleMap(
+                initialCameraPosition: CameraPosition(
+                  target: LatLng(lat!, lng!),
+                  zoom: 14,
+                ),
+                onMapCreated: (controller) {},
+                markers: setMarker(),
+              ),
       );
 
   Future<Null> chooseImage(ImageSource source) async {
