@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -23,10 +25,11 @@ class _CreateAccountState extends State<CreateAccount> {
   void initState() {
     // TODO: implement initState
 
-    findLatLng();
+    checkPermission();
   }
 
-  Future<Null> findLatLng() async {
+  // ignore: prefer_void_to_null
+  Future<Null> checkPermission() async {
     bool locationService;
     LocationPermission locationPermission;
 
@@ -35,9 +38,22 @@ class _CreateAccountState extends State<CreateAccount> {
 
     if (locationService) {
       print('Service location opened');
+      locationPermission = await Geolocator.checkPermission();
+      if (locationPermission == LocationPermission.denied) {
+        locationPermission = await Geolocator.requestPermission();
+        if (locationPermission == LocationPermission.deniedForever) {
+          MyDialog().alertLocationService(context, 'ไม่อนุญาตแชร์ Location', 'โปรดแชร์ Location');
+        } else {
+          //Find Latlng
+        }
+      } else if (locationPermission == LocationPermission.deniedForever) {
+        MyDialog().alertLocationService(context, 'ไม่อนุญาตแชร์ Location', 'โปรดแชร์ Location');
+      } else {
+        //Find Latlng
+      }
     } else {
       print('Service location Close');
-      MyDialog().alertLocationService(context);
+      MyDialog().alertLocationService(context, 'Location Service ปิดอยู่!!', 'กรุณาเปิด Location Service ด้วยค่ะ');
     }
   }
 
