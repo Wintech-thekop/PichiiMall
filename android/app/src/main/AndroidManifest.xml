@@ -5,6 +5,8 @@
    <application
         android:label="pichiimall"
         android:icon="@mipmap/ic_launcher">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyD2OHKr4K0C8Xws5PZvOqFDEj_QmPGu1p4"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
