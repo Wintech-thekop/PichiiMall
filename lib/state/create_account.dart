@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pichiimall/utility/my_constant.dart';
+import 'package:pichiimall/utility/my_dialog.dart';
 import 'package:pichiimall/widgets/show_image.dart';
 import 'package:pichiimall/widgets/show_title.dart';
 
@@ -16,6 +18,28 @@ class CreateAccount extends StatefulWidget {
 class _CreateAccountState extends State<CreateAccount> {
   String? typeUser;
   File? file;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    findLatLng();
+  }
+
+  Future<Null> findLatLng() async {
+    bool locationService;
+    LocationPermission locationPermission;
+
+    locationService = await Geolocator
+        .isLocationServiceEnabled(); // เป็นการค่า Service Location ด้วยแพ็กเกจ Geolocator
+
+    if (locationService) {
+      print('Service location opened');
+    } else {
+      print('Service location Close');
+      MyDialog().alertLocationService(context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
