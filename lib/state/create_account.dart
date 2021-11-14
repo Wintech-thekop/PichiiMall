@@ -93,14 +93,7 @@ class _CreateAccountState extends State<CreateAccount> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          IconButton(
-            onPressed: () {
-              if (formKey.currentState!.validate()) {
-                
-              }
-            },
-            icon: Icon(Icons.cloud_upload),
-          ),
+          buildCreateNewAccount(),
         ],
         title: Text('Create New Account'),
         backgroundColor: MyConstant.primary,
@@ -110,31 +103,47 @@ class _CreateAccountState extends State<CreateAccount> {
         behavior: HitTestBehavior.opaque,
         child: Form(
           key: formKey,
-          child: ListView(
-            // ignore: prefer_const_constructors
-            padding: EdgeInsets.all(15),
-            children: [
-              buildTitle('ข้อมูลทั่วไป :'),
-              buildName(size),
-              buildTitle('ชนิดของ User :'),
-              buildRadioBuyer(size),
-              buildRadioSeller(size),
-              buildRadioRider(size),
-              buildTitle('ข้อมูลพื้นฐาน :'),
-              buildAddress(size),
-              buildPhone(size),
-              buildUser(size),
-              buildPassword(size),
-              buildTitle('รูปภาพ :'),
-              buildSubTitle(
-                  'แสดงรูปภาพของผู้ใช้งาน (หากไม่สะดวกจะแสดงเป็นรูป Default แทน)'),
-              buildAvatar(size),
-              buildTitle('แสดงพิกัดที่คุณอยู่ :'),
-              buildMap(),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                buildTitle('ข้อมูลทั่วไป :'),
+                buildName(size),
+                buildTitle('ชนิดของ User :'),
+                buildRadioBuyer(size),
+                buildRadioSeller(size),
+                buildRadioRider(size),
+                buildTitle('ข้อมูลพื้นฐาน :'),
+                buildAddress(size),
+                buildPhone(size),
+                buildUser(size),
+                buildPassword(size),
+                buildTitle('รูปภาพ :'),
+                buildSubTitle(
+                    'แสดงรูปภาพของผู้ใช้งาน (หากไม่สะดวกจะแสดงเป็นรูป Default แทน)'),
+                buildAvatar(size),
+                buildTitle('แสดงพิกัดที่คุณอยู่ :'),
+                buildMap(),
+              ],
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  IconButton buildCreateNewAccount() {
+    return IconButton(
+      onPressed: () {
+        if (formKey.currentState!.validate()) {
+          if (typeUser == null) {
+            print("Non choose type user");
+            MyDialog().normalDialog(context, 'ยังไม่ได้เลือกชนิดของ User', 'กรุณาเลือกชนิดของ User ที่ต้องการ');
+          } else {
+            print("Insert data to Database");
+          }
+        }
+      },
+      icon: Icon(Icons.cloud_upload),
     );
   }
 
@@ -160,7 +169,7 @@ class _CreateAccountState extends State<CreateAccount> {
             : GoogleMap(
                 initialCameraPosition: CameraPosition(
                   target: LatLng(lat!, lng!),
-                  zoom: 14,
+                  zoom: 16,
                 ),
                 onMapCreated: (controller) {},
                 markers: setMarker(),
@@ -391,6 +400,7 @@ Row buildPhone(double size) {
         margin: EdgeInsets.only(top: 15),
         width: size * 0.6, // กำหนดความกว้างของรูปภาพเป็น 60% ของหน้าจอ
         child: TextFormField(
+          keyboardType: TextInputType.phone,
           validator: (value) {
             if (value!.isEmpty) {
               return 'กรุณากรอก Phone ด้วยค่ะ';
