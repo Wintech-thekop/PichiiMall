@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -24,6 +25,11 @@ class _CreateAccountState extends State<CreateAccount> {
   File? file;
   double? lat, lng;
   final formKey = GlobalKey<FormState>();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController userController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   @override
   void initState() {
@@ -137,14 +143,30 @@ class _CreateAccountState extends State<CreateAccount> {
         if (formKey.currentState!.validate()) {
           if (typeUser == null) {
             print("Non choose type user");
-            MyDialog().normalDialog(context, 'ยังไม่ได้เลือกชนิดของ User', 'กรุณาเลือกชนิดของ User ที่ต้องการ');
+            MyDialog().normalDialog(context, 'ยังไม่ได้เลือกชนิดของ User',
+                'กรุณาเลือกชนิดของ User ที่ต้องการ');
           } else {
             print("Insert data to Database");
+            uploadPictureAndInsertData();
           }
         }
       },
       icon: Icon(Icons.cloud_upload),
     );
+  }
+
+  Future<Null> uploadPictureAndInsertData() async {
+    String name = nameController.text;
+    String address = addressController.text;
+    String phone = phoneController.text;
+    String user = userController.text;
+    String password = passwordController.text;
+    String path =
+        '${MyConstant.domain}/pichiimall/getUserWhereUser.php?isAdd=true&user=$user';
+    print(
+        '### name = $name,  address = $address, phone = $phone, user = $user, password = $password');
+
+    await Dio().get(path).then((value) => print('## value ===>>> $value'));
   }
 
   // ignore: prefer_collection_literals
@@ -312,204 +334,209 @@ class _CreateAccountState extends State<CreateAccount> {
       ),
     );
   }
-}
 
-Row buildPassword(double size) {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Container(
-        margin: EdgeInsets.only(top: 15),
-        width: size * 0.6, // กำหนดความกว้างของรูปภาพเป็น 60% ของหน้าจอ
-        child: TextFormField(
-          validator: (value) {
-            if (value!.isEmpty) {
-              return 'กรุณากรอก Password ด้วยค่ะ';
-            } else {}
-          },
-          decoration: InputDecoration(
-            labelText: 'Password :',
-            labelStyle: MyConstant().h3Style(),
-            prefixIcon: Icon(
-              Icons.lock,
-              color: MyConstant.dark,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: MyConstant.dark),
-              borderRadius: BorderRadius.circular(25),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: MyConstant.light),
-              borderRadius: BorderRadius.circular(25),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.red),
-              borderRadius: BorderRadius.circular(25),
-            ),
-          ),
-        ),
-      ),
-    ],
-  );
-}
-
-Row buildUser(double size) {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Container(
-        margin: EdgeInsets.only(top: 15),
-        width: size * 0.6, // กำหนดความกว้างของรูปภาพเป็น 60% ของหน้าจอ
-        child: TextFormField(
-          validator: (value) {
-            if (value!.isEmpty) {
-              return 'กรุณากรอก User ด้วยค่ะ';
-            } else {}
-          },
-          decoration: InputDecoration(
-            labelText: 'User :',
-            labelStyle: MyConstant().h3Style(),
-            prefixIcon: Icon(
-              Icons.perm_identity,
-              color: MyConstant.dark,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: MyConstant.dark),
-              borderRadius: BorderRadius.circular(25),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: MyConstant.light),
-              borderRadius: BorderRadius.circular(25),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.red),
-              borderRadius: BorderRadius.circular(25),
-            ),
-          ),
-        ),
-      ),
-    ],
-  );
-}
-
-Row buildPhone(double size) {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Container(
-        margin: EdgeInsets.only(top: 15),
-        width: size * 0.6, // กำหนดความกว้างของรูปภาพเป็น 60% ของหน้าจอ
-        child: TextFormField(
-          keyboardType: TextInputType.phone,
-          validator: (value) {
-            if (value!.isEmpty) {
-              return 'กรุณากรอก Phone ด้วยค่ะ';
-            } else {}
-          },
-          decoration: InputDecoration(
-            labelText: 'Phone :',
-            labelStyle: MyConstant().h3Style(),
-            prefixIcon: Icon(
-              Icons.phone_iphone_outlined,
-              color: MyConstant.dark,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: MyConstant.dark),
-              borderRadius: BorderRadius.circular(25),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: MyConstant.light),
-              borderRadius: BorderRadius.circular(25),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.red),
-              borderRadius: BorderRadius.circular(25),
-            ),
-          ),
-        ),
-      ),
-    ],
-  );
-}
-
-Row buildAddress(double size) {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Container(
-        margin: EdgeInsets.only(top: 15),
-        width: size * 0.6, // กำหนดความกว้างของรูปภาพเป็น 60% ของหน้าจอ
-        child: TextFormField(
-          validator: (value) {
-            if (value!.isEmpty) {
-              return 'กรุณากรอก Address ด้วยค่ะ';
-            } else {}
-          },
-          maxLines: 4,
-          decoration: InputDecoration(
-            hintText: 'Address :',
-            hintStyle: MyConstant().h3Style(),
-            prefixIcon: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 0, 60),
-              child: Icon(
-                Icons.home,
+  Row buildPassword(double size) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          margin: EdgeInsets.only(top: 15),
+          width: size * 0.6, // กำหนดความกว้างของรูปภาพเป็น 60% ของหน้าจอ
+          child: TextFormField(
+            controller: passwordController,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'กรุณากรอก Password ด้วยค่ะ';
+              } else {}
+            },
+            decoration: InputDecoration(
+              labelText: 'Password :',
+              labelStyle: MyConstant().h3Style(),
+              prefixIcon: Icon(
+                Icons.lock,
                 color: MyConstant.dark,
               ),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: MyConstant.dark),
-              borderRadius: BorderRadius.circular(25),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: MyConstant.light),
-              borderRadius: BorderRadius.circular(25),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.red),
-              borderRadius: BorderRadius.circular(25),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: MyConstant.dark),
+                borderRadius: BorderRadius.circular(25),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: MyConstant.light),
+                borderRadius: BorderRadius.circular(25),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+                borderRadius: BorderRadius.circular(25),
+              ),
             ),
           ),
         ),
-      ),
-    ],
-  );
-}
+      ],
+    );
+  }
 
-Row buildName(double size) {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Container(
-        margin: EdgeInsets.only(top: 15),
-        width: size * 0.6, // กำหนดความกว้างของรูปภาพเป็น 60% ของหน้าจอ
-        child: TextFormField(
-          validator: (value) {
-            if (value!.isEmpty) {
-              return 'กรุณากรอก Name ด้วยค่ะ';
-            } else {}
-          },
-          decoration: InputDecoration(
-            labelText: 'Name :',
-            labelStyle: MyConstant().h3Style(),
-            prefixIcon: Icon(
-              Icons.fingerprint,
-              color: MyConstant.dark,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: MyConstant.dark),
-              borderRadius: BorderRadius.circular(25),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: MyConstant.light),
-              borderRadius: BorderRadius.circular(25),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.red),
-              borderRadius: BorderRadius.circular(25),
+  Row buildUser(double size) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          margin: EdgeInsets.only(top: 15),
+          width: size * 0.6, // กำหนดความกว้างของรูปภาพเป็น 60% ของหน้าจอ
+          child: TextFormField(
+            controller: userController,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'กรุณากรอก User ด้วยค่ะ';
+              } else {}
+            },
+            decoration: InputDecoration(
+              labelText: 'User :',
+              labelStyle: MyConstant().h3Style(),
+              prefixIcon: Icon(
+                Icons.perm_identity,
+                color: MyConstant.dark,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: MyConstant.dark),
+                borderRadius: BorderRadius.circular(25),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: MyConstant.light),
+                borderRadius: BorderRadius.circular(25),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+                borderRadius: BorderRadius.circular(25),
+              ),
             ),
           ),
         ),
-      ),
-    ],
-  );
+      ],
+    );
+  }
+
+  Row buildPhone(double size) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          margin: EdgeInsets.only(top: 15),
+          width: size * 0.6, // กำหนดความกว้างของรูปภาพเป็น 60% ของหน้าจอ
+          child: TextFormField(
+            controller: phoneController,
+            keyboardType: TextInputType.phone,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'กรุณากรอก Phone ด้วยค่ะ';
+              } else {}
+            },
+            decoration: InputDecoration(
+              labelText: 'Phone :',
+              labelStyle: MyConstant().h3Style(),
+              prefixIcon: Icon(
+                Icons.phone_iphone_outlined,
+                color: MyConstant.dark,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: MyConstant.dark),
+                borderRadius: BorderRadius.circular(25),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: MyConstant.light),
+                borderRadius: BorderRadius.circular(25),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+                borderRadius: BorderRadius.circular(25),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Row buildAddress(double size) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          margin: EdgeInsets.only(top: 15),
+          width: size * 0.6, // กำหนดความกว้างของรูปภาพเป็น 60% ของหน้าจอ
+          child: TextFormField(
+            controller: addressController,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'กรุณากรอก Address ด้วยค่ะ';
+              } else {}
+            },
+            maxLines: 4,
+            decoration: InputDecoration(
+              hintText: 'Address :',
+              hintStyle: MyConstant().h3Style(),
+              prefixIcon: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 60),
+                child: Icon(
+                  Icons.home,
+                  color: MyConstant.dark,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: MyConstant.dark),
+                borderRadius: BorderRadius.circular(25),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: MyConstant.light),
+                borderRadius: BorderRadius.circular(25),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+                borderRadius: BorderRadius.circular(25),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Row buildName(double size) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          margin: EdgeInsets.only(top: 15),
+          width: size * 0.6, // กำหนดความกว้างของรูปภาพเป็น 60% ของหน้าจอ
+          child: TextFormField(
+            controller: nameController,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'กรุณากรอก Name ด้วยค่ะ';
+              } else {}
+            },
+            decoration: InputDecoration(
+              labelText: 'Name :',
+              labelStyle: MyConstant().h3Style(),
+              prefixIcon: Icon(
+                Icons.fingerprint,
+                color: MyConstant.dark,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: MyConstant.dark),
+                borderRadius: BorderRadius.circular(25),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: MyConstant.light),
+                borderRadius: BorderRadius.circular(25),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+                borderRadius: BorderRadius.circular(25),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }

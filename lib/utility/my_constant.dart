@@ -4,6 +4,7 @@ class MyConstant {
   //Generally
 
   static String appName = "Phichii Mall";
+  static String domain = "https://89ab-2001-fb1-154-9e6d-a02d-9685-9301-3d18.ngrok.io";
 
   //Routes
   static String routeAuthen = "/authen";
