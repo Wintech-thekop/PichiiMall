@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'dart:io';
+import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ class CreateAccount extends StatefulWidget {
 
 class _CreateAccountState extends State<CreateAccount> {
   String? typeUser;
+  String avatar = "";
   File? file;
   double? lat, lng;
   final formKey = GlobalKey<FormState>();
@@ -166,7 +168,36 @@ class _CreateAccountState extends State<CreateAccount> {
     print(
         '### name = $name,  address = $address, phone = $phone, user = $user, password = $password');
 
-    await Dio().get(path).then((value) => print('## value ===>>> $value'));
+    await Dio().get(path).then((value) async {
+      print('## value ===>>> $value');
+      if (value.toString() == 'null') {
+        if (file == null) {
+          // No Avatar
+          processInsertMySQL();
+        } else {
+          // Have Avatar
+          String apiSaveAvatar =
+              '${MyConstant.domain}/pichiimall/saveAvatar.php';
+          int i = Random().nextInt(100000);
+          String nameAvatar = 'avatar$i.jpg';
+          Map<String, dynamic> map = Map();
+          map['file'] =
+              await MultipartFile.fromFile(file!.path, filename: nameAvatar);
+          FormData data = FormData.fromMap(map);
+          await Dio().post(apiSaveAvatar, data: data).then((value) {
+            avatar = '/pichiimall/avatar/$nameAvatar';
+            processInsertMySQL();
+          });
+        }
+      } else {
+        MyDialog().normalDialog(context, 'User name False !!!',
+            'This User name already used. Please change new User name');
+      }
+    });
+  }
+
+  Future<Null> processInsertMySQL() async {
+    print('### Process insert mySQL and avatar ==>> $avatar');
   }
 
   // ignore: prefer_collection_literals
