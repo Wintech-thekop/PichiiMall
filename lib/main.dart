@@ -9,9 +9,9 @@ import 'package:pichiimall/utility/my_constant.dart';
 final Map<String, WidgetBuilder> map = {
   '/authen': (BuildContext context) => Authen(),
   '/createAccount': (BuildContext context) => CreateAccount(),
-  '/buyerServive': (BuildContext context) => BuyerService(),
-  '/sellerServive': (BuildContext context) => SellerService(),
-  '/riderServive': (BuildContext context) => RiderService(),
+  '/buyerService': (BuildContext context) => BuyerService(),
+  '/sellerService': (BuildContext context) => SellerService(),
+  '/riderService': (BuildContext context) => RiderService(),
 };
 
 String? initialRoute; // initialRoute can be null
