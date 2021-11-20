@@ -15,6 +15,7 @@ class MyConstant {
   static String routeBuyerService = "/buyerService";
   static String routeSellerService = "/sellerService";
   static String routeRiderService = "/riderService";
+  static String routeAddProduct = "/addProduct";
 
   // Images
   static String image1 = 'images/image1.png';

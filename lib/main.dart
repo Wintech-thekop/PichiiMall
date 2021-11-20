@@ -1,4 +1,7 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
+import 'package:pichiimall/state/add_product.dart';
 import 'package:pichiimall/state/authen.dart';
 import 'package:pichiimall/state/buyer_service.dart';
 import 'package:pichiimall/state/create_account.dart';
@@ -13,6 +16,7 @@ final Map<String, WidgetBuilder> map = {
   '/buyerService': (BuildContext context) => BuyerService(),
   '/sellerService': (BuildContext context) => SellerService(),
   '/riderService': (BuildContext context) => RiderService(),
+  '/addProduct': (BuildContext context) => AddProduct(),
 };
 
 String? initialRoute; // initialRoute can be null
