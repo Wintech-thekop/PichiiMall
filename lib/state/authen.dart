@@ -7,6 +7,7 @@ import 'package:pichiimall/utility/my_constant.dart';
 import 'package:pichiimall/utility/my_dialog.dart';
 import 'package:pichiimall/widgets/show_image.dart';
 import 'package:pichiimall/widgets/show_title.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Authen extends StatefulWidget {
   const Authen({Key? key}) : super(key: key);
@@ -93,7 +94,7 @@ class _AuthenState extends State<Authen> {
   Future<Null> checkAuthen({String? user, String? password}) async {
     String apiCheckAuthen =
         "${MyConstant.domain}/pichiimall/getUserWhereUser.php?isAdd=true&user=$user";
-    await Dio().get(apiCheckAuthen).then((value) {
+    await Dio().get(apiCheckAuthen).then((value) async {
       if (value.toString() == 'null') {
         MyDialog().normalDialog(context, 'User name False!!!',
             'There is no user $user in the database');
@@ -102,6 +103,11 @@ class _AuthenState extends State<Authen> {
           UserModel model = UserModel.fromMap(item);
           if (password == model.password) {
             String type = model.type;
+
+            SharedPreferences preferences =
+                await SharedPreferences.getInstance();
+            preferences.setString('type', type);
+            preferences.setString('user', model.user);
 
             switch (type) {
               case 'buyer':
@@ -116,7 +122,7 @@ class _AuthenState extends State<Authen> {
                 Navigator.pushNamedAndRemoveUntil(
                     context, MyConstant.routeRiderService, (route) => false);
                 break;
-                default:
+              default:
             }
           } else {
             // Authen false

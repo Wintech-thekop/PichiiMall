@@ -5,6 +5,7 @@ import 'package:pichiimall/state/create_account.dart';
 import 'package:pichiimall/state/rider_service.dart';
 import 'package:pichiimall/state/seller_service.dart';
 import 'package:pichiimall/utility/my_constant.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final Map<String, WidgetBuilder> map = {
   '/authen': (BuildContext context) => Authen(),
@@ -16,8 +17,31 @@ final Map<String, WidgetBuilder> map = {
 
 String? initialRoute; // initialRoute can be null
 
-void main() {
-  initialRoute = MyConstant.routeAuthen;
+Future<Null> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  String? type = preferences.getString('type');
+
+  print('### type ===>> $type');
+  if (type?.isEmpty ?? true) {
+    initialRoute = MyConstant.routeAuthen;
+  } else {
+    switch (type) {
+      case 'buyer':
+        initialRoute = MyConstant.routeBuyerService;
+
+        break;
+      case 'seller':
+        initialRoute = MyConstant.routeSellerService;
+
+        break;
+      case 'rider':
+        initialRoute = MyConstant.routeRiderService;
+
+        break;
+      default:
+    }
+  }
   runApp(MyApp());
 }
 
