@@ -12,6 +12,8 @@ class AddProduct extends StatefulWidget {
 }
 
 class _AddProductState extends State<AddProduct> {
+  final formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,25 +26,34 @@ class _AddProductState extends State<AddProduct> {
           behavior: HitTestBehavior.opaque,
           child: Center(
             child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  buildProductName(constraints),
-                  buildProductPrice(constraints),
-                  buildProductDetail(constraints),
-                  buildImage(constraints),
-                  Container(
-                    width: constraints.maxWidth * 0.75,
-                    child: ElevatedButton(
-                      style: MyConstant().myButtonStyle(),
-                      onPressed: () {},
-                      child: Text('Add Product'),
-                    ),
-                  ),
-                ],
+              child: Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    buildProductName(constraints),
+                    buildProductPrice(constraints),
+                    buildProductDetail(constraints),
+                    buildImage(constraints),
+                    addProductButton(constraints),
+                  ],
+                ),
               ),
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Container addProductButton(BoxConstraints constraints) {
+    return Container(
+      width: constraints.maxWidth * 0.75,
+      child: ElevatedButton(
+        style: MyConstant().myButtonStyle(),
+        onPressed: () {
+          if (formKey.currentState!.validate()) {}
+        },
+        child: Text('Add Product'),
       ),
     );
   }
@@ -92,6 +103,13 @@ class _AddProductState extends State<AddProduct> {
       width: constraints.maxWidth * 0.75,
       margin: EdgeInsets.only(top: 15),
       child: TextFormField(
+        validator: (value) {
+          if (value!.isEmpty) {
+            return 'กรุณากรอกรายละเอียดสินค้าด้วยค่ะ';
+          } else {
+            return null;
+          }
+        },
         maxLines: 4,
         decoration: InputDecoration(
           hintText: 'Product detail :',
@@ -125,6 +143,13 @@ class _AddProductState extends State<AddProduct> {
       width: constraints.maxWidth * 0.75,
       margin: EdgeInsets.only(top: 15),
       child: TextFormField(
+        validator: (value) {
+          if (value!.isEmpty) {
+            return 'กรุณากรอกราคาด้วยค่ะ';
+          } else {
+            return null;
+          }
+        },
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
           labelText: 'Product Price :',
@@ -155,6 +180,13 @@ class _AddProductState extends State<AddProduct> {
       width: constraints.maxWidth * 0.75,
       margin: EdgeInsets.only(top: 15),
       child: TextFormField(
+        validator: (value) {
+          if (value!.isEmpty) {
+            return 'กรุณากรอกชื่อสินค้าด้วยค่ะ';
+          } else {
+            return null;
+          }
+        },
         decoration: InputDecoration(
           labelText: 'Product Name :',
           labelStyle: MyConstant().h3Style(),
