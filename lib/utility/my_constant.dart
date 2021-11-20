@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 
 class MyConstant {
@@ -39,9 +41,21 @@ class MyConstant {
         fontWeight: FontWeight.w700,
       );
 
+  TextStyle h2WhiteStyle() => TextStyle(
+        fontSize: 18,
+        color: Colors.white,
+        fontWeight: FontWeight.w700,
+      );
+
   TextStyle h3Style() => TextStyle(
         fontSize: 14,
         color: dark,
+        fontWeight: FontWeight.normal,
+      );
+
+  TextStyle h3WhiteStyle() => TextStyle(
+        fontSize: 14,
+        color: Colors.white,
         fontWeight: FontWeight.normal,
       );
 
