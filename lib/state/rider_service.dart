@@ -17,7 +17,7 @@ class _RiderServiceState extends State<RiderService> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Rider'),
-        backgroundColor: MyConstant.primary,
+        
       ),
       drawer: Drawer(
         child: ShowSignOut(),

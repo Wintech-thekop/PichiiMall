@@ -29,7 +29,7 @@ class _SellerServiceState extends State<SellerService> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Seller'),
-        backgroundColor: MyConstant.primary,
+        
       ),
       drawer: Drawer(
         child: Stack(

@@ -19,7 +19,7 @@ class _BuyerServiceState extends State<BuyerService> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Buyer'),
-        backgroundColor: MyConstant.primary,
+       
       ),
       drawer: Drawer(
         child: ShowSignOut(),
