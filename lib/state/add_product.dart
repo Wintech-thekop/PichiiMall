@@ -1,8 +1,10 @@
-// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace
+// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, avoid_print
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:pichiimall/utility/my_constant.dart';
+import 'package:pichiimall/widgets/show_image.dart';
+import 'package:pichiimall/widgets/show_title.dart';
 
 class AddProduct extends StatefulWidget {
   const AddProduct({Key? key}) : super(key: key);
@@ -58,6 +60,38 @@ class _AddProductState extends State<AddProduct> {
     );
   }
 
+  Future<Null> chooseSourceImageDialog(int index) async {
+    print("You click image$index");
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: ListTile(
+          leading: ShowImage(path: MyConstant.image4),
+          title: ShowTitle(
+              title: 'Source Image ${index + 1} ?',
+              textStyle: MyConstant().h2Style()),
+          subtitle: ShowTitle(
+              title: 'Please select Tab from Camera or Gallery',
+              textStyle: MyConstant().h3Style()),
+        ),
+        actions: [
+          Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Camera'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Gallery'),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   Column buildImage(BoxConstraints constraints) {
     return Column(
       children: [
@@ -69,27 +103,39 @@ class _AddProductState extends State<AddProduct> {
         Container(
           width: constraints.maxWidth * 0.75,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
                 width: 50,
                 height: 50,
-                child: Image.asset(MyConstant.image5),
+                child: InkWell(
+                  child: Image.asset(MyConstant.image5),
+                  onTap: () => chooseSourceImageDialog(0),
+                ),
               ),
               Container(
                 width: 50,
                 height: 50,
-                child: Image.asset(MyConstant.image5),
+                child: InkWell(
+                  child: Image.asset(MyConstant.image5),
+                  onTap: () => chooseSourceImageDialog(1),
+                ),
               ),
               Container(
                 width: 50,
                 height: 50,
-                child: Image.asset(MyConstant.image5),
+                child: InkWell(
+                  child: Image.asset(MyConstant.image5),
+                  onTap: () => chooseSourceImageDialog(2),
+                ),
               ),
               Container(
                 width: 50,
                 height: 50,
-                child: Image.asset(MyConstant.image5),
+                child: InkWell(
+                  child: Image.asset(MyConstant.image5),
+                  onTap: () => chooseSourceImageDialog(3),
+                ),
               ),
             ],
           ),
