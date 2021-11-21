@@ -26,6 +26,7 @@ class _AddProductState extends State<AddProduct> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    initialFile();
   }
 
   void initialFile() {
@@ -87,7 +88,7 @@ class _AddProductState extends State<AddProduct> {
       );
       setState(() {
         file = File(result!.path);
-     //  files[index] = file;
+        files[index] = file;
       });
     } catch (e) {}
   }
@@ -137,7 +138,8 @@ class _AddProductState extends State<AddProduct> {
         Container(
           width: constraints.maxWidth * 0.75,
           height: constraints.maxWidth * 0.75,
-          child: file == null ? Image.asset(MyConstant.image5) : Image.file(file!),
+          child:
+              file == null ? Image.asset(MyConstant.image5) : Image.file(file!),
         ),
         Container(
           width: constraints.maxWidth * 0.75,
@@ -148,7 +150,12 @@ class _AddProductState extends State<AddProduct> {
                 width: 50,
                 height: 50,
                 child: InkWell(
-                  child: Image.asset(MyConstant.image5),
+                  child: files[0] == null
+                      ? Image.asset(MyConstant.image5)
+                      : Image.file(
+                          files[0]!,
+                          fit: BoxFit.cover,
+                        ),
                   onTap: () => chooseSourceImageDialog(0),
                 ),
               ),
@@ -156,7 +163,12 @@ class _AddProductState extends State<AddProduct> {
                 width: 50,
                 height: 50,
                 child: InkWell(
-                  child: Image.asset(MyConstant.image5),
+                  child: files[1] == null
+                      ? Image.asset(MyConstant.image5)
+                      : Image.file(
+                          files[1]!,
+                          fit: BoxFit.cover,
+                        ),
                   onTap: () => chooseSourceImageDialog(1),
                 ),
               ),
@@ -164,7 +176,12 @@ class _AddProductState extends State<AddProduct> {
                 width: 50,
                 height: 50,
                 child: InkWell(
-                  child: Image.asset(MyConstant.image5),
+                  child: files[2] == null
+                      ? Image.asset(MyConstant.image5)
+                      : Image.file(
+                          files[2]!,
+                          fit: BoxFit.cover,
+                        ),
                   onTap: () => chooseSourceImageDialog(2),
                 ),
               ),
@@ -172,7 +189,12 @@ class _AddProductState extends State<AddProduct> {
                 width: 50,
                 height: 50,
                 child: InkWell(
-                  child: Image.asset(MyConstant.image5),
+                  child: files[3] == null
+                      ? Image.asset(MyConstant.image5)
+                      : Image.file(
+                          files[3]!,
+                          fit: BoxFit.cover,
+                        ),
                   onTap: () => chooseSourceImageDialog(3),
                 ),
               ),
