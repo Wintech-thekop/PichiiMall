@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, prefer_collection_literals
 
 import 'dart:io';
 import 'dart:math';

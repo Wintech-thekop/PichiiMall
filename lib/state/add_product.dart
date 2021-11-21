@@ -1,7 +1,9 @@
 // ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, avoid_print, prefer_void_to_null, deprecated_member_use
 
 import 'dart:io';
+import 'dart:math';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image_picker/image_picker.dart';
@@ -85,7 +87,7 @@ class _AddProductState extends State<AddProduct> {
     );
   }
 
-  void processAddProduct() {
+  Future<Null> processAddProduct() async {
     if (formKey.currentState!.validate()) {
       bool checkFile = true;
       for (var item in files) {
@@ -95,6 +97,20 @@ class _AddProductState extends State<AddProduct> {
       }
       if (checkFile) {
         print(' ## There are 4 images ##');
+        String apiSaveProduct =
+            '${MyConstant.domain}/pichiimall/saveProduct.php';
+
+        for (var item in files) {
+          int i = Random().nextInt(1000000);
+          String nameFile = 'product$i.jpg';
+          Map<String, dynamic> map = {};
+          map['file'] =
+              await MultipartFile.fromFile(item!.path, filename: nameFile);
+          FormData data = FormData.fromMap(map);
+          await Dio()
+              .post(apiSaveProduct, data: data)
+              .then((value) => print('## Upload image success ##'));
+        }
       } else {
         MyDialog()
             .normalDialog(context, 'More Image!!!', 'Please choose more image');
