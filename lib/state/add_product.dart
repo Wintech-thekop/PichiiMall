@@ -1,7 +1,10 @@
-// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, avoid_print
+// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, avoid_print, prefer_void_to_null, deprecated_member_use
+
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pichiimall/utility/my_constant.dart';
 import 'package:pichiimall/widgets/show_image.dart';
 import 'package:pichiimall/widgets/show_title.dart';
@@ -15,6 +18,21 @@ class AddProduct extends StatefulWidget {
 
 class _AddProductState extends State<AddProduct> {
   final formKey = GlobalKey<FormState>();
+
+  List<File?> files = []; // files = [null, null, null, null];
+  File? file;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  void initialFile() {
+    for (var i = 0; i < 4; i++) {
+      files.add(null);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +78,20 @@ class _AddProductState extends State<AddProduct> {
     );
   }
 
+  Future<Null> processImagePicker(ImageSource source, int index) async {
+    try {
+      var result = await ImagePicker().getImage(
+        source: source,
+        maxWidth: 800,
+        maxHeight: 800,
+      );
+      setState(() {
+        file = File(result!.path);
+     //  files[index] = file;
+      });
+    } catch (e) {}
+  }
+
   Future<Null> chooseSourceImageDialog(int index) async {
     print("You click image$index");
     showDialog(
@@ -75,14 +107,21 @@ class _AddProductState extends State<AddProduct> {
               textStyle: MyConstant().h3Style()),
         ),
         actions: [
-          Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               TextButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () {
+                  Navigator.pop(context);
+                  processImagePicker(ImageSource.camera, index);
+                },
                 child: Text('Camera'),
               ),
               TextButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () {
+                  Navigator.pop(context);
+                  processImagePicker(ImageSource.gallery, index);
+                },
                 child: Text('Gallery'),
               ),
             ],
@@ -98,7 +137,7 @@ class _AddProductState extends State<AddProduct> {
         Container(
           width: constraints.maxWidth * 0.75,
           height: constraints.maxWidth * 0.75,
-          child: Image.asset(MyConstant.image5),
+          child: file == null ? Image.asset(MyConstant.image5) : Image.file(file!),
         ),
         Container(
           width: constraints.maxWidth * 0.75,
