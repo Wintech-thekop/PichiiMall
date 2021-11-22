@@ -96,10 +96,13 @@ class _AddProductState extends State<AddProduct> {
         }
       }
       if (checkFile) {
-        print(' ## There are 4 images ##');
+        MyDialog().showProgressDialog(context);
+
+        //print(' ## There are 4 images ##');
         String apiSaveProduct =
             '${MyConstant.domain}/pichiimall/saveProduct.php';
 
+        int loop = 0;
         for (var item in files) {
           int i = Random().nextInt(1000000);
           String nameFile = 'product$i.jpg';
@@ -107,9 +110,14 @@ class _AddProductState extends State<AddProduct> {
           map['file'] =
               await MultipartFile.fromFile(item!.path, filename: nameFile);
           FormData data = FormData.fromMap(map);
-          await Dio()
-              .post(apiSaveProduct, data: data)
-              .then((value) => print('## Upload image success ##'));
+          await Dio().post(apiSaveProduct, data: data).then((value) {
+            print('## Upload image success ##');
+            loop++;
+            if (loop >= files.length) {
+              Navigator.pop(context);
+            }
+            
+          });
         }
       } else {
         MyDialog()

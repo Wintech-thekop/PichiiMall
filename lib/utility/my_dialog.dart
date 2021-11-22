@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_void_to_null, prefer_const_constructors
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -7,7 +9,25 @@ import 'package:pichiimall/widgets/show_image.dart';
 import 'package:pichiimall/widgets/show_title.dart';
 
 class MyDialog {
-  // ignore: prefer_void_to_null
+  
+  Future<Null> showProgressDialog(BuildContext context) async {
+    // การทำ Circular Progress Indicator
+    showDialog(
+      context: context,
+      builder: (context) => WillPopScope(
+        child: Center(
+          child: CircularProgressIndicator(
+            color: Colors.pink,
+          ),
+        ),
+        onWillPop: () async {
+          return false;
+        },
+      ),
+    );
+  }
+  
+  
   Future<Null> alertLocationService(
       BuildContext context, String title, String message) async {
     showDialog(
@@ -26,7 +46,7 @@ class MyDialog {
               await Geolocator.openLocationSettings();
               exit(0); // ปิดแอพเราทิ้งไป
             },
-            // ignore: prefer_const_constructors
+
             child: Text('OK'),
           )
         ],
@@ -34,7 +54,6 @@ class MyDialog {
     );
   }
 
-// ignore: prefer_void_to_null
   Future<Null> normalDialog(
       BuildContext context, String title, String message) async {
     showDialog(
