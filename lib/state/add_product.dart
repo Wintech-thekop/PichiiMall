@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, avoid_print, prefer_void_to_null, deprecated_member_use
+// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, avoid_print, prefer_void_to_null, deprecated_member_use, empty_catches
 
 import 'dart:io';
 import 'dart:math';
@@ -11,6 +11,7 @@ import 'package:pichiimall/utility/my_constant.dart';
 import 'package:pichiimall/utility/my_dialog.dart';
 import 'package:pichiimall/widgets/show_image.dart';
 import 'package:pichiimall/widgets/show_title.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddProduct extends StatefulWidget {
   const AddProduct({Key? key}) : super(key: key);
@@ -24,6 +25,10 @@ class _AddProductState extends State<AddProduct> {
 
   List<File?> files = []; // files = [null, null, null, null];
   File? file;
+
+  TextEditingController nameController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
+  TextEditingController detailController = TextEditingController();
 
   @override
   void initState() {
@@ -110,13 +115,24 @@ class _AddProductState extends State<AddProduct> {
           map['file'] =
               await MultipartFile.fromFile(item!.path, filename: nameFile);
           FormData data = FormData.fromMap(map);
-          await Dio().post(apiSaveProduct, data: data).then((value) {
+          await Dio().post(apiSaveProduct, data: data).then((value) async {
             print('## Upload image success ##');
             loop++;
             if (loop >= files.length) {
+              SharedPreferences preference =
+                  await SharedPreferences.getInstance();
+
+              String idSeller = preference.getString('id')!;
+              String nameSeller = preference.getString('name')!;
+              String name = nameController.text;
+              String price = priceController.text;
+              String detail = detailController.text;
+
+              print(' idSeller is $idSeller, nameSeller is $nameSeller');
+              print(' name is $name, price is $price, detail is $detail');
+
               Navigator.pop(context);
             }
-            
           });
         }
       } else {
@@ -257,6 +273,7 @@ class _AddProductState extends State<AddProduct> {
       width: constraints.maxWidth * 0.75,
       margin: EdgeInsets.only(top: 15),
       child: TextFormField(
+        controller: detailController,
         validator: (value) {
           if (value!.isEmpty) {
             return 'กรุณากรอกรายละเอียดสินค้าด้วยค่ะ';
@@ -297,6 +314,7 @@ class _AddProductState extends State<AddProduct> {
       width: constraints.maxWidth * 0.75,
       margin: EdgeInsets.only(top: 15),
       child: TextFormField(
+        controller: priceController,
         validator: (value) {
           if (value!.isEmpty) {
             return 'กรุณากรอกราคาด้วยค่ะ';
@@ -334,6 +352,7 @@ class _AddProductState extends State<AddProduct> {
       width: constraints.maxWidth * 0.75,
       margin: EdgeInsets.only(top: 15),
       child: TextFormField(
+        controller: nameController,
         validator: (value) {
           if (value!.isEmpty) {
             return 'กรุณากรอกชื่อสินค้าด้วยค่ะ';

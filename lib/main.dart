@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_void_to_null, avoid_print
 
 import 'package:flutter/material.dart';
 import 'package:pichiimall/state/add_product.dart';

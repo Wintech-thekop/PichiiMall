@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace
 
 import 'dart:convert';
 
@@ -108,8 +108,10 @@ class _AuthenState extends State<Authen> {
 
             SharedPreferences preferences =
                 await SharedPreferences.getInstance();
+            preferences.setString('id', model.id);
             preferences.setString('type', type);
             preferences.setString('user', model.user);
+            preferences.setString('name', model.name);
 
             switch (type) {
               case 'buyer':

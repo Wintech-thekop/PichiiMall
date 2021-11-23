@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, prefer_collection_literals
+// ignore_for_file: avoid_print, prefer_collection_literals, prefer_const_constructors, must_call_super, prefer_void_to_null, sized_box_for_whitespace, empty_catches
 
 import 'dart:io';
 import 'dart:math';
@@ -40,7 +40,6 @@ class _CreateAccountState extends State<CreateAccount> {
     checkPermission();
   }
 
-  // ignore: prefer_void_to_null
   Future<Null> checkPermission() async {
     bool locationService;
     LocationPermission locationPermission;
@@ -173,7 +172,12 @@ class _CreateAccountState extends State<CreateAccount> {
       if (value.toString() == 'null') {
         if (file == null) {
           // No Avatar
-          processInsertMySQL(name: name, address: address, phone: phone, user: user, password: password);
+          processInsertMySQL(
+              name: name,
+              address: address,
+              phone: phone,
+              user: user,
+              password: password);
         } else {
           // Have Avatar
           String apiSaveAvatar =
@@ -186,7 +190,12 @@ class _CreateAccountState extends State<CreateAccount> {
           FormData data = FormData.fromMap(map);
           await Dio().post(apiSaveAvatar, data: data).then((value) {
             avatar = '/pichiimall/avatar/$nameAvatar';
-            processInsertMySQL(name: name, address: address, phone: phone, user: user, password: password);
+            processInsertMySQL(
+                name: name,
+                address: address,
+                phone: phone,
+                user: user,
+                password: password);
           });
         }
       } else {
@@ -215,10 +224,8 @@ class _CreateAccountState extends State<CreateAccount> {
     });
   }
 
-  // ignore: prefer_collection_literals
   Set<Marker> setMarker() => <Marker>[
         Marker(
-          // ignore: prefer_const_constructors
           markerId: MarkerId('id'),
           position: LatLng(lat!, lng!),
           infoWindow: InfoWindow(
@@ -230,9 +237,8 @@ class _CreateAccountState extends State<CreateAccount> {
         //   color: Colors.grey,
         width: double.infinity,
         height: 300,
-        // ignore: prefer_const_constructors
+
         child: lat == null
-            // ignore: prefer_const_constructors
             ? ShowProgress()
             : GoogleMap(
                 initialCameraPosition: CameraPosition(
@@ -272,7 +278,6 @@ class _CreateAccountState extends State<CreateAccount> {
           ),
         ),
         Container(
-          // ignore: prefer_const_constructors
           margin: EdgeInsets.symmetric(vertical: 15),
           width: size * 0.6, // กำหนดความกว้างของรูปภาพเป็น 60% ของหน้าจอ
 
