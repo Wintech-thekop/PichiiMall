@@ -35,6 +35,7 @@ class _CreateAccountState extends State<CreateAccount> {
 
   @override
   void initState() {
+    // ignore: todo
     // TODO: implement initState
 
     checkPermission();

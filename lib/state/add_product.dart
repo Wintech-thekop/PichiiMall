@@ -29,9 +29,11 @@ class _AddProductState extends State<AddProduct> {
   TextEditingController nameController = TextEditingController();
   TextEditingController priceController = TextEditingController();
   TextEditingController detailController = TextEditingController();
+  List<String> paths = [];
 
   @override
   void initState() {
+    // ignore: todo
     // TODO: implement initState
     super.initState();
     initialFile();
@@ -111,6 +113,9 @@ class _AddProductState extends State<AddProduct> {
         for (var item in files) {
           int i = Random().nextInt(1000000);
           String nameFile = 'product$i.jpg';
+
+          paths.add('/product/$nameFile');
+
           Map<String, dynamic> map = {};
           map['file'] =
               await MultipartFile.fromFile(item!.path, filename: nameFile);
@@ -127,9 +132,16 @@ class _AddProductState extends State<AddProduct> {
               String name = nameController.text;
               String price = priceController.text;
               String detail = detailController.text;
+              String images = paths.toString();
 
               print(' idSeller is $idSeller, nameSeller is $nameSeller');
               print(' name is $name, price is $price, detail is $detail');
+              print('### images ==> $images');
+
+              String path =
+                  '${MyConstant.domain}/pichiimall/insertProduct.php?isAdd=true&idSeller=$idSeller&nameSeller=$nameSeller&name=$name&price=$price&detail=$detail&images=$images';
+
+              await Dio().get(path).then((value) => Navigator.pop(context));
 
               Navigator.pop(context);
             }
