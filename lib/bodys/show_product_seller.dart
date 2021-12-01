@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:pichiimall/models/product_model.dart';
 import 'package:pichiimall/utility/my_constant.dart';
 import 'package:pichiimall/widgets/show_progress.dart';
+import 'package:pichiimall/widgets/show_title.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ShowProductSeller extends StatefulWidget {
@@ -17,8 +18,8 @@ class ShowProductSeller extends StatefulWidget {
 }
 
 class _ShowProductSellerState extends State<ShowProductSeller> {
-
-bool load = true;
+  bool load = true;
+  bool? haveData;
 
   @override
   void initState() {
@@ -33,14 +34,24 @@ bool load = true;
         '${MyConstant.domain}/pichiimall/getProductWhereIdSeller.php?isAdd=true&idSeller=$id';
 
     await Dio().get(getProductWhereIdSeller).then((value) {
-      for (var item in json.decode(value.data)) {
-        // print('### value ==>> $value');
-        ProductModel model = ProductModel.fromMap(item);
-        print('### Product name ==>> ${model.name}');
-
+      if (value.toString() == 'null') {
+        // No data
         setState(() {
           load = false;
+          haveData = false;
         });
+      } else {
+        // Have data
+        for (var item in json.decode(value.data)) {
+          // print('### value ==>> $value');
+          ProductModel model = ProductModel.fromMap(item);
+          print('### Product name ==>> ${model.name}');
+
+          setState(() {
+            load = false;
+            haveData = true;
+          });
+        }
       }
     });
   }
@@ -48,7 +59,18 @@ bool load = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: load ? ShowProgress() : Text('Loading Done'),
+      body: load
+          ? ShowProgress()
+          : haveData!
+              ? Text('Have data')
+              : Center(
+                child: Column(mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ShowTitle(title: 'Have no data', textStyle: MyConstant().h1Style()),
+                    ShowTitle(title: 'Please add any Product', textStyle: MyConstant().h2Style()),
+                  ],
+                ),
+              ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: MyConstant.dark,
         onPressed: () =>
