@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:pichiimall/models/product_model.dart';
 import 'package:pichiimall/utility/my_constant.dart';
+import 'package:pichiimall/widgets/show_progress.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ShowProductSeller extends StatefulWidget {
@@ -16,6 +17,9 @@ class ShowProductSeller extends StatefulWidget {
 }
 
 class _ShowProductSellerState extends State<ShowProductSeller> {
+
+bool load = true;
+
   @override
   void initState() {
     super.initState();
@@ -33,6 +37,10 @@ class _ShowProductSellerState extends State<ShowProductSeller> {
         // print('### value ==>> $value');
         ProductModel model = ProductModel.fromMap(item);
         print('### Product name ==>> ${model.name}');
+
+        setState(() {
+          load = false;
+        });
       }
     });
   }
@@ -40,7 +48,7 @@ class _ShowProductSellerState extends State<ShowProductSeller> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Text('This is Show Product Seller'),
+      body: load ? ShowProgress() : Text('Loading Done'),
       floatingActionButton: FloatingActionButton(
         backgroundColor: MyConstant.dark,
         onPressed: () =>
