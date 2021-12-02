@@ -20,6 +20,7 @@ class ShowProductSeller extends StatefulWidget {
 class _ShowProductSellerState extends State<ShowProductSeller> {
   bool load = true;
   bool? haveData;
+  List<ProductModel> productModels = [];
 
   @override
   void initState() {
@@ -50,6 +51,7 @@ class _ShowProductSellerState extends State<ShowProductSeller> {
           setState(() {
             load = false;
             haveData = true;
+            productModels.add(model);
           });
         }
       }
@@ -62,20 +64,64 @@ class _ShowProductSellerState extends State<ShowProductSeller> {
       body: load
           ? ShowProgress()
           : haveData!
-              ? Text('Have data')
+              ? LayoutBuilder(
+                  builder: (context, constraints) => buildListView(constraints),
+                )
               : Center(
-                child: Column(mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ShowTitle(title: 'Have no data', textStyle: MyConstant().h1Style()),
-                    ShowTitle(title: 'Please add any Product', textStyle: MyConstant().h2Style()),
-                  ],
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ShowTitle(
+                          title: 'Have no data',
+                          textStyle: MyConstant().h1Style()),
+                      ShowTitle(
+                          title: 'Please add any Product',
+                          textStyle: MyConstant().h2Style()),
+                    ],
+                  ),
                 ),
-              ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: MyConstant.dark,
         onPressed: () =>
             Navigator.pushNamed(context, MyConstant.routeAddProduct),
         child: Text('Add'),
+      ),
+    );
+  }
+
+  ListView buildListView(BoxConstraints constraints) {
+    return ListView.builder(
+      itemCount: productModels.length,
+      itemBuilder: (context, index) => Card(
+        child: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(4),
+              width: constraints.maxWidth * 0.5 - 4,
+              child: ShowTitle(
+                title: productModels[index].name,
+                textStyle: MyConstant().h2Style(),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.all(4),
+              width: constraints.maxWidth * 0.5 - 4,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ShowTitle(
+                    title: 'Price: ${productModels[index].price} THB',
+                    textStyle: MyConstant().h2Style(),
+                  ),
+                  ShowTitle(
+                    title: productModels[index].detail,
+                    textStyle: MyConstant().h3Style(),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
