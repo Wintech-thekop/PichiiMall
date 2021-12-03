@@ -131,9 +131,12 @@ class _ShowProductSellerState extends State<ShowProductSeller> {
               ),
             ),
             Container(
+              margin: EdgeInsets.only(top: 20),
               padding: EdgeInsets.all(4),
+              height: constraints.maxWidth * 0.4,
               width: constraints.maxWidth * 0.5 - 4,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ShowTitle(
@@ -143,6 +146,21 @@ class _ShowProductSellerState extends State<ShowProductSeller> {
                   ShowTitle(
                     title: productModels[index].detail,
                     textStyle: MyConstant().h3Style(),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.edit_outlined,
+                            size: 36, color: MyConstant.dark),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.delete_outlined,
+                            size: 36, color: MyConstant.dark),
+                      ),
+                    ],
                   ),
                 ],
               ),
