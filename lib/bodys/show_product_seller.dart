@@ -156,7 +156,10 @@ class _ShowProductSellerState extends State<ShowProductSeller> {
                             size: 36, color: MyConstant.dark),
                       ),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          print('You click delete index $index');
+                          confirmDialogDelete(productModels[index]);
+                        },
                         icon: Icon(Icons.delete_outlined,
                             size: 36, color: MyConstant.dark),
                       ),
@@ -167,6 +170,40 @@ class _ShowProductSellerState extends State<ShowProductSeller> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Future<Null> confirmDialogDelete(ProductModel productModel) async {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: ListTile(
+          leading: CachedNetworkImage(
+            imageUrl: buildUrl(productModel.images),
+            placeholder: (context, url) => ShowProgress(),
+            errorWidget: (context, url, error) =>
+                ShowImage(path: MyConstant.image1),
+          ),
+          title: ShowTitle(
+            title: 'Delete ${productModel.name} ???',
+            textStyle: MyConstant().h2Style(),
+          ),
+          subtitle: ShowTitle(
+            title: productModel.detail,
+            textStyle: MyConstant().h3Style(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Delete'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancel'),
+          ),
+        ],
       ),
     );
   }
