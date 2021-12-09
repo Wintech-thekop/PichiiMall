@@ -31,6 +31,9 @@ class _ShowProductSellerState extends State<ShowProductSeller> {
   }
 
   Future<Null> loadValueFromAPI() async {
+    if (productModels.length != 0) {
+      productModels.clear();
+    }
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String id = preferences.getString('id')!;
     String getProductWhereIdSeller =
@@ -85,7 +88,9 @@ class _ShowProductSellerState extends State<ShowProductSeller> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: MyConstant.dark,
         onPressed: () =>
-            Navigator.pushNamed(context, MyConstant.routeAddProduct),
+            Navigator.pushNamed(context, MyConstant.routeAddProduct).then(
+          (value) => loadValueFromAPI(),
+        ),
         child: Text('Add'),
       ),
     );
@@ -110,14 +115,14 @@ class _ShowProductSellerState extends State<ShowProductSeller> {
               width: constraints.maxWidth * 0.5 - 4,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   ShowTitle(
                     title: productModels[index].name,
                     textStyle: MyConstant().h2Style(),
                   ),
                   Container(
-                    height: constraints.maxWidth * 0.4,
+                    height: constraints.maxWidth * 0.37,
                     width: constraints.maxWidth * 0.5,
                     child: CachedNetworkImage(
                       fit: BoxFit.cover,
@@ -196,7 +201,14 @@ class _ShowProductSellerState extends State<ShowProductSeller> {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () async {
+              String apiDeleteProductWhereId =
+                  '${MyConstant.domain}/pichiimall/deleteProductWhereId.php?isAdd=true&id=${productModel.id}';
+              await Dio().get(apiDeleteProductWhereId).then((value) {
+                Navigator.pop(context);
+                loadValueFromAPI();
+              });
+            },
             child: Text('Delete'),
           ),
           TextButton(
