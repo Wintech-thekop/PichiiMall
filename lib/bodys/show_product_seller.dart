@@ -6,6 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:pichiimall/models/product_model.dart';
+import 'package:pichiimall/state/edit_product.dart';
 import 'package:pichiimall/utility/my_constant.dart';
 import 'package:pichiimall/widgets/show_image.dart';
 import 'package:pichiimall/widgets/show_progress.dart';
@@ -156,7 +157,14 @@ class _ShowProductSellerState extends State<ShowProductSeller> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditProduct(productModel: productModels[index],),
+                            ),
+                          );
+                        },
                         icon: Icon(Icons.edit_outlined,
                             size: 36, color: MyConstant.dark),
                       ),
