@@ -1,7 +1,10 @@
-// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace
+// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, deprecated_member_use
+
+import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pichiimall/models/product_model.dart';
 import 'package:pichiimall/utility/my_constant.dart';
 import 'package:pichiimall/widgets/show_progress.dart';
@@ -22,6 +25,7 @@ class _EditProductState extends State<EditProduct> {
   TextEditingController productDetailController = TextEditingController();
 
   List<String> pathImages = [];
+  List<File?> files = [];
 
   final formKey = GlobalKey<FormState>();
 
@@ -46,6 +50,7 @@ class _EditProductState extends State<EditProduct> {
     List<String> strings = string.split(',');
     for (var item in strings) {
       pathImages.add(item.trim());
+      files.add(null);
     }
     print('$pathImages');
   }
@@ -111,24 +116,49 @@ class _EditProductState extends State<EditProduct> {
     );
   }
 
+  Future<Null> chooseImage(ImageSource source, int index) async {
+    try {
+      var result = await ImagePicker().getImage(
+        source: source,
+        maxWidth: 800,
+        maxHeight: 800,
+      );
+      setState(() {
+        files[index] = File(result!.path);
+      });
+    } catch (e) {}
+  }
+
   Container buildImage(BoxConstraints constraints, int index) {
     return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      decoration: BoxDecoration(
+        border: Border.all(color: MyConstant.light),
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              chooseImage(ImageSource.camera, index);
+            },
             icon: Icon(Icons.add_a_photo),
           ),
           Container(
+            padding: EdgeInsets.symmetric(vertical: 8),
             width: constraints.maxWidth * 0.5,
-            child: CachedNetworkImage(
-              imageUrl: '${MyConstant.domain}/pichiimall${pathImages[index]}',
-              placeholder: (context, url) => ShowProgress(),
-            ),
+            child: files[index] == null
+                ? CachedNetworkImage(
+                    imageUrl:
+                        '${MyConstant.domain}/pichiimall${pathImages[index]}',
+                    placeholder: (context, url) => ShowProgress(),
+                  )
+                : Image.file(files[index]!),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              chooseImage(ImageSource.gallery, index);
+            },
             icon: Icon(Icons.add_photo_alternate),
           ),
         ],
