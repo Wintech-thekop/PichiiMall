@@ -23,6 +23,8 @@ class _EditProductState extends State<EditProduct> {
 
   List<String> pathImages = [];
 
+  final formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     // ignore: todo
@@ -52,26 +54,61 @@ class _EditProductState extends State<EditProduct> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          actions: [
+            IconButton(
+              onPressed: () {
+                processEditProduct();
+              },
+              icon: Icon(Icons.cloud_upload),
+              tooltip: 'Upload Editting Product',
+            )
+          ],
           title: Text('Edit Product'),
         ),
         body: LayoutBuilder(
           builder: (context, constraints) => SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                buildTitle('General :'),
-                buildProductName(constraints),
-                buildProductPrice(constraints),
-                buildProductDetail(constraints),
-                buildTitle('Image Product :'),
-                buildImage(constraints, 0),
-                buildImage(constraints, 1),
-                buildImage(constraints, 2),
-                buildImage(constraints, 3),
-              ],
+            child: GestureDetector(
+              onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+              behavior: HitTestBehavior.opaque,
+              child: Form(
+                key: formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    buildTitle('General :'),
+                    buildProductName(constraints),
+                    buildProductPrice(constraints),
+                    buildProductDetail(constraints),
+                    buildTitle('Image Product :'),
+                    buildImage(constraints, 0),
+                    buildImage(constraints, 1),
+                    buildImage(constraints, 2),
+                    buildImage(constraints, 3),
+                    editProductButton(constraints),
+                  ],
+                ),
+              ),
             ),
           ),
         ));
+  }
+
+  Row editProductButton(BoxConstraints constraints) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: constraints.maxWidth * 0.75,
+          child: ElevatedButton(
+            style: MyConstant().myButtonStyle(),
+            onPressed: () {
+              processEditProduct();
+            },
+            child: Text('Upload editting Product'),
+          ),
+        ),
+      ],
+    );
   }
 
   Container buildImage(BoxConstraints constraints, int index) {
@@ -109,6 +146,13 @@ class _EditProductState extends State<EditProduct> {
           child: TextFormField(
             maxLines: 3,
             controller: productDetailController,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'กรุณากรอกรายละเอียดสินค้าด้วยค่ะ';
+              } else {
+                return null;
+              }
+            },
             decoration: InputDecoration(
               labelText: 'Product Detail:',
               labelStyle: MyConstant().h3Style(),
@@ -139,7 +183,15 @@ class _EditProductState extends State<EditProduct> {
           margin: EdgeInsets.only(top: 16),
           width: constraints.maxWidth * 0.75,
           child: TextFormField(
+            keyboardType: TextInputType.number,
             controller: productPriceController,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'กรุณากรอกราคาด้วยค่ะ';
+              } else {
+                return null;
+              }
+            },
             decoration: InputDecoration(
               labelText: 'Product Price (THB):',
               labelStyle: MyConstant().h3Style(),
@@ -170,6 +222,13 @@ class _EditProductState extends State<EditProduct> {
           width: constraints.maxWidth * 0.75,
           child: TextFormField(
             controller: productNameController,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'กรุณากรอกชื่อสินค้าด้วยค่ะ';
+              } else {
+                return null;
+              }
+            },
             decoration: InputDecoration(
               labelText: 'Product Name:',
               labelStyle: MyConstant().h3Style(),
@@ -197,5 +256,14 @@ class _EditProductState extends State<EditProduct> {
       margin: EdgeInsets.all(15),
       child: ShowTitle(title: string, textStyle: MyConstant().h2Style()),
     );
+  }
+
+  void processEditProduct() {
+    if (formKey.currentState!.validate()) {
+      String name = productNameController.text;
+      String price = productPriceController.text;
+      String detail = productDetailController.text;
+      print('$name, $price, $detail');
+    }
   }
 }
