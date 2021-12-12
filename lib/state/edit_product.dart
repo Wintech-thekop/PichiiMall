@@ -27,6 +27,8 @@ class _EditProductState extends State<EditProduct> {
   List<String> pathImages = [];
   List<File?> files = [];
 
+  bool statusImage = false;
+
   final formKey = GlobalKey<FormState>();
 
   @override
@@ -125,6 +127,7 @@ class _EditProductState extends State<EditProduct> {
       );
       setState(() {
         files[index] = File(result!.path);
+        statusImage = true;
       });
     } catch (e) {}
   }
@@ -293,7 +296,17 @@ class _EditProductState extends State<EditProduct> {
       String name = productNameController.text;
       String price = productPriceController.text;
       String detail = productDetailController.text;
-      print('$name, $price, $detail');
+      String id = productModel!.id;
+      String images;
+
+      if (statusImage) {
+        // upload image and refresh array pathImages
+        images = 'Waiting refresh Images';
+      } else {
+        images = pathImages.toString();
+      }
+
+      print('$id, $name, $price, $detail, $images');
     }
   }
 }
