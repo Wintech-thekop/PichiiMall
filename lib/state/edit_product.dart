@@ -1,12 +1,15 @@
 // ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, deprecated_member_use
 
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pichiimall/models/product_model.dart';
 import 'package:pichiimall/utility/my_constant.dart';
+import 'package:pichiimall/utility/my_dialog.dart';
 import 'package:pichiimall/widgets/show_progress.dart';
 import 'package:pichiimall/widgets/show_title.dart';
 
@@ -111,7 +114,7 @@ class _EditProductState extends State<EditProduct> {
             onPressed: () {
               processEditProduct();
             },
-            child: Text('Upload editting Product'),
+            child: Text('Upload Editting Product'),
           ),
         ),
       ],
@@ -291,8 +294,10 @@ class _EditProductState extends State<EditProduct> {
     );
   }
 
-  void processEditProduct() {
+  Future<Null> processEditProduct() async {
     if (formKey.currentState!.validate()) {
+      MyDialog().showProgressDialog(context);
+
       String name = productNameController.text;
       String price = productPriceController.text;
       String detail = productDetailController.text;
@@ -301,9 +306,29 @@ class _EditProductState extends State<EditProduct> {
 
       if (statusImage) {
         // upload image and refresh array pathImages
-        images = 'Waiting refresh Images';
+        int index = 0;
+        for (var item in files) {
+          if (item != null) {
+            int i = Random().nextInt(1000000);
+            String nameImage = 'productEdit$i.jpg';
+            String apiUploadImage =
+                '${MyConstant.domain}/pichiimall/saveProduct.php';
+
+            Map<String, dynamic> map = {};
+            map['file'] =
+                await MultipartFile.fromFile(item.path, filename: nameImage);
+            FormData formData = FormData.fromMap(map);
+            await Dio().post(apiUploadImage, data: formData).then((value) {
+              pathImages[index] = '/product/$nameImage';
+            });
+          }
+          index++;
+        }
+        images = pathImages.toString();
+        Navigator.pop(context);
       } else {
         images = pathImages.toString();
+        Navigator.pop(context);
       }
 
       print('$id, $name, $price, $detail, $images');
