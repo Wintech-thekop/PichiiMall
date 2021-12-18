@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_is_empty
 
 import 'dart:convert';
 
@@ -9,6 +9,7 @@ import 'package:pichiimall/bodys/show_order_seller.dart';
 import 'package:pichiimall/bodys/show_product_seller.dart';
 import 'package:pichiimall/models/user_model.dart';
 import 'package:pichiimall/utility/my_constant.dart';
+import 'package:pichiimall/widgets/show_progress.dart';
 import 'package:pichiimall/widgets/show_signout.dart';
 import 'package:pichiimall/widgets/show_title.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,11 +22,7 @@ class SellerService extends StatefulWidget {
 }
 
 class _SellerServiceState extends State<SellerService> {
-  List<Widget> widgets = [
-    ShowOrderSeller(),
-    ShopManageSeller(),
-    ShowProductSeller()
-  ];
+  List<Widget> widgets = [];
 
   int indexWidgets = 0;
   UserModel? userModel;
@@ -49,7 +46,11 @@ class _SellerServiceState extends State<SellerService> {
       for (var item in json.decode(value.data)) {
         setState(() {
           userModel = UserModel.fromMap(item);
-          print('${userModel!.name}');
+          // print('${userModel!.name}');
+
+          widgets.add(ShowOrderSeller());
+          widgets.add(ShopManageSeller(userModel: userModel!));
+          widgets.add(ShowProductSeller());
         });
       }
     });
@@ -61,22 +62,24 @@ class _SellerServiceState extends State<SellerService> {
       appBar: AppBar(
         title: Text('Seller'),
       ),
-      drawer: Drawer(
-        child: Stack(
-          children: [
-            ShowSignOut(),
-            Column(
-              children: [
-                buildDrawerHeader(),
-                menuShowOrder(),
-                menuShowManage(),
-                menuShowProduct(),
-              ],
+      drawer: widgets.length == 0
+          ? ShowProgress()
+          : Drawer(
+              child: Stack(
+                children: [
+                  ShowSignOut(),
+                  Column(
+                    children: [
+                      buildDrawerHeader(),
+                      menuShowOrder(),
+                      menuShowManage(),
+                      menuShowProduct(),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
-      body: widgets[indexWidgets],
+      body: widgets.length == 0 ? ShowProgress() : widgets[indexWidgets],
     );
   }
 
