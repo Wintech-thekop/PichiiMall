@@ -10,6 +10,8 @@ import 'package:pichiimall/state/seller_service.dart';
 import 'package:pichiimall/utility/my_constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'state/edit_profile_seller.dart';
+
 final Map<String, WidgetBuilder> map = {
   '/authen': (BuildContext context) => Authen(),
   '/createAccount': (BuildContext context) => CreateAccount(),
@@ -17,6 +19,7 @@ final Map<String, WidgetBuilder> map = {
   '/sellerService': (BuildContext context) => SellerService(),
   '/riderService': (BuildContext context) => RiderService(),
   '/addProduct': (BuildContext context) => AddProduct(),
+  '/editProfileSeller': (BuildContext context) => EditProfileSeller(),
 };
 
 String? initialRoute; // initialRoute can be null
