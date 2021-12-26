@@ -27,6 +27,7 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
   TextEditingController addressController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   LatLng? latLng;
+  final formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -78,24 +79,49 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Edit Profile Seller"),
-      ),
+      appBar: AppBar(title: Text("Edit Profile Seller"), actions: [
+        IconButton(
+          tooltip: 'Edit Profile Seller',
+          onPressed: () => processEditProfileSeller(),
+          icon: Icon(Icons.edit),
+        ),
+      ]),
       body: LayoutBuilder(
-        builder: (context, constraints) => ListView(
-          padding: EdgeInsets.all(16),
-          children: [
-            buildTitle('General :'),
-            buildName(constraints),
-            buildAddress(constraints),
-            buildPhone(constraints),
-            buildTitle('Avatar :'),
-            buildAvatar(constraints),
-            buildTitle('Location :'),
-            buildMap(constraints),
-          ],
+        builder: (context, constraints) => GestureDetector(
+          onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+          behavior: HitTestBehavior.opaque,
+          child: Form(
+            key: formKey,
+            child: ListView(
+              padding: EdgeInsets.all(16),
+              children: [
+                buildTitle('General :'),
+                buildName(constraints),
+                buildAddress(constraints),
+                buildPhone(constraints),
+                buildTitle('Avatar :'),
+                buildAvatar(constraints),
+                buildTitle('Location :'),
+                buildMap(constraints),
+                buildButtonEditProfile(),
+              ],
+            ),
+          ),
         ),
       ),
+    );
+  }
+
+  Future<Null> processEditProfileSeller() async {
+    print('processEditProfile');
+    if (formKey.currentState!.validate()) {}
+  }
+
+  ElevatedButton buildButtonEditProfile() {
+    return ElevatedButton.icon(
+      onPressed: () => processEditProfileSeller(),
+      icon: Icon(Icons.edit),
+      label: Text('Edit Profile Seller'),
     );
   }
 
@@ -191,6 +217,13 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
           margin: EdgeInsets.only(top: 16),
           width: constraints.maxWidth * 0.6,
           child: TextFormField(
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'กรุณากรอกชื่อร้านค้าด้วยค่ะ';
+              } else {
+                return null;
+              }
+            },
             controller: nameController,
             decoration: InputDecoration(
               labelText: 'Name: ',
@@ -222,6 +255,13 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
           margin: EdgeInsets.only(top: 16),
           width: constraints.maxWidth * 0.6,
           child: TextFormField(
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'กรุณากรอกที่อยู่ร้านค้าด้วยค่ะ';
+              } else {
+                return null;
+              }
+            },
             maxLines: 3,
             controller: addressController,
             decoration: InputDecoration(
@@ -254,6 +294,13 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
           margin: EdgeInsets.symmetric(vertical: 16),
           width: constraints.maxWidth * 0.6,
           child: TextFormField(
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'กรุณากรอกเบอร์ติดต่อร้านค้าด้วยค่ะ';
+              } else {
+                return null;
+              }
+            },
             controller: phoneController,
             decoration: InputDecoration(
               labelText: 'Phone number : ',
