@@ -12,6 +12,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pichiimall/models/user_model.dart';
 import 'package:pichiimall/utility/my_constant.dart';
+import 'package:pichiimall/utility/my_dialog.dart';
 import 'package:pichiimall/widgets/show_image.dart';
 import 'package:pichiimall/widgets/show_progress.dart';
 import 'package:pichiimall/widgets/show_title.dart';
@@ -118,10 +119,13 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
 
   Future<void> processEditProfileSeller() async {
     print('processEditProfile');
+
+    MyDialog().showProgressDialog(context);
+
     if (formKey.currentState!.validate()) {
       if (file == null) {
         //print('Used current Avatar');
-        editValueToMySQL();
+        editValueToMySQL(userModel!.avatar);
       } else {
         // print('Used new Avatar');
         String apiSaveAvatar = '${MyConstant.domain}/pichiimall/saveAvatar.php';
@@ -135,14 +139,24 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
         map['file'] =
             await MultipartFile.fromFile(file!.path, filename: nameFile);
         FormData formData = FormData.fromMap(map);
-        await Dio()
-            .post(apiSaveAvatar, data: formData)
-            .then((value) => print('Upload success'));
+        await Dio().post(apiSaveAvatar, data: formData).then((value) {
+          print('Upload success');
+          String pathAvatar = '/pichiimall/avatar/$nameFile';
+          editValueToMySQL(pathAvatar);
+        });
       }
     }
   }
 
-  Future<Null> editValueToMySQL() async {}
+  Future<Null> editValueToMySQL(String pathAvatar) async {
+    print('$pathAvatar');
+    String apiEditProfile =
+        '${MyConstant.domain}/pichiimall/editProfileSellerWhereId.php?isAdd=true&id=11&name=${nameController.text}&address=${addressController.text} &phone=${phoneController.text} &avatar=$pathAvatar&lat=${latLng!.latitude}&lng=${latLng!.longitude}';
+    await Dio().get(apiEditProfile).then((value) {
+      Navigator.pop(context);
+      Navigator.pop(context);
+    });
+  }
 
   ElevatedButton buildButtonEditProfile() {
     return ElevatedButton.icon(
