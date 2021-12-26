@@ -1,12 +1,14 @@
-// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace
+// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, deprecated_member_use
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pichiimall/models/user_model.dart';
 import 'package:pichiimall/utility/my_constant.dart';
 import 'package:pichiimall/widgets/show_image.dart';
@@ -28,6 +30,7 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
   TextEditingController phoneController = TextEditingController();
   LatLng? latLng;
   final formKey = GlobalKey<FormState>();
+  File? file;
 
   @override
   void initState() {
@@ -37,7 +40,7 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
     findLatLng();
   }
 
-  Future<Null> findLatLng() async {
+  Future<void> findLatLng() async {
     Position? position = await findPosition();
     if (position != null) {
       setState(() {
@@ -56,7 +59,7 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
     return position;
   }
 
-  Future<Null> findUser() async {
+  Future<void> findUser() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String user = preferences.getString('user')!;
 
@@ -112,7 +115,7 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
     );
   }
 
-  Future<Null> processEditProfileSeller() async {
+  Future<void> processEditProfileSeller() async {
     print('processEditProfile');
     if (formKey.currentState!.validate()) {}
   }
@@ -161,6 +164,19 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
     );
   }
 
+  Future<void> createAvatar({ImageSource? source}) async {
+    try {
+      var result = await ImagePicker().getImage(
+        source: source!,
+        maxWidth: 800,
+        maxHeight: 800,
+      );
+      setState(() {
+        file = File(result!.path);
+      });
+    } catch (e) {}
+  }
+
   Row buildAvatar(BoxConstraints constraints) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -173,7 +189,7 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
           child: Row(
             children: [
               IconButton(
-                onPressed: () {},
+                onPressed: () => createAvatar(source: ImageSource.camera),
                 icon: Icon(
                   Icons.add_a_photo,
                   color: MyConstant.dark,
@@ -188,15 +204,11 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
                         padding: const EdgeInsets.all(8.0),
                         child: userModel!.avatar == null
                             ? ShowImage(path: MyConstant.avatar)
-                            : CachedNetworkImage(
-                                imageUrl:
-                                    '${MyConstant.domain}${userModel!.avatar}',
-                                placeholder: (context, url) => ShowProgress(),
-                              ),
+                            : file == null ? buildShowImageNetwork() : Image.file(file!),
                       ),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () => createAvatar(source: ImageSource.gallery),
                 icon: Icon(
                   Icons.add_photo_alternate,
                   color: MyConstant.dark,
@@ -207,6 +219,14 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
         ),
       ],
     );
+  }
+
+  CachedNetworkImage buildShowImageNetwork() {
+    return CachedNetworkImage(
+                              imageUrl:
+                                  '${MyConstant.domain}${userModel!.avatar}',
+                              placeholder: (context, url) => ShowProgress(),
+                            );
   }
 
   Row buildName(BoxConstraints constraints) {
