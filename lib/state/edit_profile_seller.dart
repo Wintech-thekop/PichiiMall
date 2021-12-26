@@ -151,7 +151,7 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
   Future<Null> editValueToMySQL(String pathAvatar) async {
     print('$pathAvatar');
     String apiEditProfile =
-        '${MyConstant.domain}/pichiimall/editProfileSellerWhereId.php?isAdd=true&id=11&name=${nameController.text}&address=${addressController.text} &phone=${phoneController.text} &avatar=$pathAvatar&lat=${latLng!.latitude}&lng=${latLng!.longitude}';
+        '${MyConstant.domain}/pichiimall/editProfileSellerWhereId.php?isAdd=true&id=${userModel!.id}&name=${nameController.text}&address=${addressController.text} &phone=${phoneController.text} &avatar=$pathAvatar&lat=${latLng!.latitude}&lng=${latLng!.longitude}';
     await Dio().get(apiEditProfile).then((value) {
       Navigator.pop(context);
       Navigator.pop(context);

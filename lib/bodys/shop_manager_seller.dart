@@ -1,6 +1,9 @@
 // ignore_for_file: prefer_const_constructors, prefer_collection_literals
 
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pichiimall/models/user_model.dart';
@@ -26,6 +29,19 @@ class _ShopManageSellerState extends State<ShopManageSeller> {
     userModel = widget.userModel;
   }
 
+  Future<Null> refreshUserModel() async {
+    print("Refreshing user model");
+    String apiGetUserWhereId =
+        '${MyConstant.domain}/pichiimall/getUserWhereId.php?isAdd=true&id=${userModel!.id}';
+    await Dio().get(apiGetUserWhereId).then((value) {
+      for (var item in json.decode(value.data)) {
+        setState(() {
+          userModel = UserModel.fromMap(item);
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +49,8 @@ class _ShopManageSellerState extends State<ShopManageSeller> {
         backgroundColor: MyConstant.primary,
         child: Icon(Icons.edit),
         onPressed: () =>
-            Navigator.pushNamed(context, MyConstant.routeEditProfileSeller),
+            Navigator.pushNamed(context, MyConstant.routeEditProfileSeller)
+                .then((value) => refreshUserModel()),
       ),
       body: LayoutBuilder(
         builder: (context, constraints) => Padding(
@@ -58,7 +75,7 @@ class _ShopManageSellerState extends State<ShopManageSeller> {
                 ShowTitle(
                     title: 'Address : ', textStyle: MyConstant().h2Style()),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
                       width: constraints.maxWidth * 0.6,
