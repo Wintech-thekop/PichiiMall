@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
@@ -117,8 +118,31 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
 
   Future<void> processEditProfileSeller() async {
     print('processEditProfile');
-    if (formKey.currentState!.validate()) {}
+    if (formKey.currentState!.validate()) {
+      if (file == null) {
+        //print('Used current Avatar');
+        editValueToMySQL();
+      } else {
+        // print('Used new Avatar');
+        String apiSaveAvatar = '${MyConstant.domain}/pichiimall/saveAvatar.php';
+
+        List<String> nameAvatars = userModel!.avatar.split('/');
+        String nameFile = nameAvatars[nameAvatars.length - 1];
+        nameFile = 'edit${Random().nextInt(100)}$nameFile';
+        // print('Used new Avatar is $nameFile');
+
+        Map<String, dynamic> map = {};
+        map['file'] =
+            await MultipartFile.fromFile(file!.path, filename: nameFile);
+        FormData formData = FormData.fromMap(map);
+        await Dio()
+            .post(apiSaveAvatar, data: formData)
+            .then((value) => print('Upload success'));
+      }
+    }
   }
+
+  Future<Null> editValueToMySQL() async {}
 
   ElevatedButton buildButtonEditProfile() {
     return ElevatedButton.icon(
@@ -204,7 +228,9 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
                         padding: const EdgeInsets.all(8.0),
                         child: userModel!.avatar == null
                             ? ShowImage(path: MyConstant.avatar)
-                            : file == null ? buildShowImageNetwork() : Image.file(file!),
+                            : file == null
+                                ? buildShowImageNetwork()
+                                : Image.file(file!),
                       ),
               ),
               IconButton(
@@ -223,10 +249,9 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
 
   CachedNetworkImage buildShowImageNetwork() {
     return CachedNetworkImage(
-                              imageUrl:
-                                  '${MyConstant.domain}${userModel!.avatar}',
-                              placeholder: (context, url) => ShowProgress(),
-                            );
+      imageUrl: '${MyConstant.domain}${userModel!.avatar}',
+      placeholder: (context, url) => ShowProgress(),
+    );
   }
 
   Row buildName(BoxConstraints constraints) {
