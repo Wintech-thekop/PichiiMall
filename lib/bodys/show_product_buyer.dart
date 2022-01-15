@@ -23,7 +23,7 @@ UserModel? userModel;
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(userModel!.name),),
-      body: Text('This ShowProductBuyer'),
+      body: Text('This ShowProductBuyer idSeller is ${userModel!.id}'),
     );
   }
 }
