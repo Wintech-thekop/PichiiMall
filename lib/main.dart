@@ -7,6 +7,7 @@ import 'package:pichiimall/state/buyer_service.dart';
 import 'package:pichiimall/state/create_account.dart';
 import 'package:pichiimall/state/rider_service.dart';
 import 'package:pichiimall/state/seller_service.dart';
+import 'package:pichiimall/state/show_cart.dart';
 import 'package:pichiimall/utility/my_constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,6 +21,7 @@ final Map<String, WidgetBuilder> map = {
   '/riderService': (BuildContext context) => RiderService(),
   '/addProduct': (BuildContext context) => AddProduct(),
   '/editProfileSeller': (BuildContext context) => EditProfileSeller(),
+  '/showCart': (BuildContext context) => ShowCart(),
 };
 
 String? initialRoute; // initialRoute can be null

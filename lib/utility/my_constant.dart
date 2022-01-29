@@ -6,7 +6,8 @@ class MyConstant {
   //Generally
 
   static String appName = "Phichii Mall";
-  static String domain = "https://67b8-2001-fb1-154-e369-2847-ae2c-463d-f599.ngrok.io";
+  static String domain =
+      "https://4587-2001-fb1-154-e369-2847-ae2c-463d-f599.ngrok.io";
 
   //Routes
   static String routeAuthen = "/authen";
@@ -16,6 +17,7 @@ class MyConstant {
   static String routeRiderService = "/riderService";
   static String routeAddProduct = "/addProduct";
   static String routeEditProfileSeller = "/editProfileSeller";
+  static String routeShowCart = "/showCart";
 
   // Images
   static String image1 = 'images/image1.png';

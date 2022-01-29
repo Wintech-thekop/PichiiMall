@@ -1,3 +1,4 @@
+import 'package:pichiimall/models/sqlite_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -27,9 +28,18 @@ class SQLiteHelper {
   }
 
   Future<Database> connectedDatabases() async {
-    return await openDatabase(join(await getDatabasesPath(),nameDatabase));
+    return await openDatabase(join(await getDatabasesPath(), nameDatabase));
   }
 
-
-  
+  Future<List<SQLiteModel>> readSQLite() async {
+    Database database = await connectedDatabases();
+    List<SQLiteModel> result = [];
+    List<Map<String, dynamic>> maps = await database.query(tableDatabase);
+    print(' maps on SQLiteHelper ==> $maps');
+    for (var item in maps) {
+      SQLiteModel model = SQLiteModel.fromMap(item);
+      result.add(model);
+    }
+    return result;
+  }
 }

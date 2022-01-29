@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pichiimall/bodys/my_money_buyer.dart';
 import 'package:pichiimall/bodys/my_order_buyer.dart';
 import 'package:pichiimall/bodys/show_all_shop_buyer.dart';
+import 'package:pichiimall/state/show_cart.dart';
 import 'package:pichiimall/utility/my_constant.dart';
 import 'package:pichiimall/widgets/show_signout.dart';
 import 'package:pichiimall/widgets/show_title.dart';
@@ -29,6 +30,12 @@ class _BuyerServiceState extends State<BuyerService> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Buyer'),
+        actions: [
+          IconButton(
+            onPressed: () => Navigator.pushNamed(context, MyConstant.routeShowCart),
+            icon: Icon(Icons.shopping_cart_outlined),
+          ),
+        ],
       ),
       drawer: Drawer(
         child: Stack(
