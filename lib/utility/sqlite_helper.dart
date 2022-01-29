@@ -1,3 +1,6 @@
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
+
 class SQLiteHelper {
   final String nameDatabase = 'pichiimall.db';
   final int version = 1;
@@ -14,5 +17,19 @@ class SQLiteHelper {
     initialDatabase();
   }
 
-  Future<Null> initialDatabase() async {}
+  Future<Null> initialDatabase() async {
+    await openDatabase(
+      join(await getDatabasesPath(), nameDatabase),
+      onCreate: (db, version) => db.execute(
+          'CREATE TABLE $tableDatabase ($columnId INTEGER PRIMARY KEY, $columnIdSeller TEXT, $columnIdProduct TEXT, $columnName TEXT, $columnPrice TEXT, $columnAmount TEXT, $columnSum TEXT)'),
+      version: version,
+    );
+  }
+
+  Future<Database> connectedDatabases() async {
+    return await openDatabase(join(await getDatabasesPath(),nameDatabase));
+  }
+
+
+  
 }
