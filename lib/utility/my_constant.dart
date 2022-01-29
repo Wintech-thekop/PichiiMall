@@ -6,8 +6,7 @@ class MyConstant {
   //Generally
 
   static String appName = "Phichii Mall";
-  static String domain =
-      "https://cf3c-2001-fb1-154-e369-2847-ae2c-463d-f599.ngrok.io";
+  static String domain = "https://b291-27-145-209-97.ngrok.io";
 
   //Routes
   static String routeAuthen = "/authen";
@@ -61,7 +60,16 @@ class MyConstant {
         color: Colors.white,
         fontWeight: FontWeight.w700,
       );
-
+  TextStyle h2RedStyle() => TextStyle(
+        fontSize: 18,
+        color: Colors.red,
+        fontWeight: FontWeight.w700,
+      );
+  TextStyle h2BlueStyle() => TextStyle(
+        fontSize: 18,
+        color: Colors.blue,
+        fontWeight: FontWeight.w700,
+      );
   TextStyle h3Style() => TextStyle(
         fontSize: 14,
         color: dark,

@@ -25,6 +25,7 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
   List<ProductModel> productModels = [];
   List<List<String>> listImages = [];
   int indexImage = 0;
+  int amountInt = 1;
 
   @override
   void initState() {
@@ -243,10 +244,64 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
                       ),
                     ],
                   ),
-                )
+                ),
+                
               ],
             ),
           ),
+          actions: [
+            Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        if (amountInt != 1) {
+                          setState(() {
+                            amountInt--;
+                          });
+                        }
+                      },
+                      icon: Icon(Icons.remove_circle_outline,
+                          color: MyConstant.dark),
+                    ),
+                    ShowTitle(
+                        title: amountInt.toString(),
+                        textStyle: MyConstant().h1Style()),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          amountInt++;
+                        });
+                      },
+                      icon: Icon(Icons.add_circle_outline,
+                          color: MyConstant.dark),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text(
+                        'Add Cart',
+                        style: MyConstant().h2BlueStyle(),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text(
+                        'Cancel',
+                        style: MyConstant().h2RedStyle(),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
