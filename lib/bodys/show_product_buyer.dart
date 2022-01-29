@@ -24,6 +24,7 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
   bool? haveProduct;
   List<ProductModel> productModels = [];
   List<List<String>> listImages = [];
+  int indexImage = 0;
 
   @override
   void initState() {
@@ -37,7 +38,7 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
     String urlAPI =
         '${MyConstant.domain}/pichiimall/getProductWhereIdSeller.php?isAdd=true&idSeller=${userModel!.id}';
     await Dio().get(urlAPI).then((value) {
-      print('value ==> $value');
+      // print('value ==> $value');
       if (value.toString() == 'null') {
         setState(() {
           haveProduct = false;
@@ -161,17 +162,70 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
       ProductModel productModel, List<String> images) async {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: ListTile(
-          leading: ShowImage(path: MyConstant.image2),
-          title: ShowTitle(
-              title: productModel.name, textStyle: MyConstant().h2Style()),
-          subtitle: ShowTitle(
-              title: 'Price: ${productModel.price} THB',
-              textStyle: MyConstant().h3Style()),
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: ListTile(
+            leading: ShowImage(path: MyConstant.image2),
+            title: ShowTitle(
+                title: productModel.name, textStyle: MyConstant().h2Style()),
+            subtitle: ShowTitle(
+                title: 'Price: ${productModel.price} THB',
+                textStyle: MyConstant().h3Style()),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CachedNetworkImage(
+                imageUrl:
+                    '${MyConstant.domain}/pichiimall/${images[indexImage]}',
+                placeholder: (context, url) => ShowProgress(),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                        onPressed: () {
+                          setState(() {
+                            indexImage = 0;
+                            print('indexImage ==>> $indexImage');
+                          });
+                        },
+                        icon: Icon(Icons.filter_1)),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          indexImage = 1;
+                          print('indexImage ==>> $indexImage');
+                        });
+                      },
+                      icon: Icon(Icons.filter_2),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          indexImage = 2;
+                          print('indexImage ==>> $indexImage');
+                        });
+                      },
+                      icon: Icon(Icons.filter_3),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          indexImage = 3;
+                          print('indexImage ==>> $indexImage');
+                        });
+                      },
+                      icon: Icon(Icons.filter_4),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
-        content: CachedNetworkImage(
-            imageUrl: '${MyConstant.domain}/pichiimall/${images[0]}'),
       ),
     );
   }
