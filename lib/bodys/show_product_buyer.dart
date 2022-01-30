@@ -7,6 +7,7 @@ import 'package:pichiimall/models/product_model.dart';
 import 'package:pichiimall/models/sqlite_model.dart';
 import 'package:pichiimall/models/user_model.dart';
 import 'package:pichiimall/utility/my_constant.dart';
+import 'package:pichiimall/utility/my_dialog.dart';
 import 'package:pichiimall/utility/sqlite_helper.dart';
 import 'package:pichiimall/widgets/show_image.dart';
 import 'package:pichiimall/widgets/show_progress.dart';
@@ -28,6 +29,7 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
   List<List<String>> listImages = [];
   int indexImage = 0;
   int amountInt = 1;
+  String? currentIdSeller;
 
   @override
   void initState() {
@@ -35,6 +37,20 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
     super.initState();
     userModel = widget.userModel;
     readAPI();
+    readCart();
+  }
+
+  Future<void> readCart() async {
+    await SQLiteHelper().readSQLite().then((value) {
+      if (value.length != 0) {
+        List<SQLiteModel> models = [];
+        for (var model in value) {
+          models.add(model);
+        }
+        currentIdSeller = models[0].idSeller;
+        print('### currentIdSeller ==>> $currentIdSeller');
+      }
+    });
   }
 
   Future<Null> readAPI() async {
@@ -286,7 +302,6 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
                   children: [
                     TextButton(
                       onPressed: () async {
-                        // Navigator.pop(context);
                         String idSeller = userModel!.id;
                         String idProduct = productModel.id;
                         String name = productModel.name;
@@ -295,21 +310,25 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
                         int sumInt = int.parse(price) * amountInt;
                         String sum = sumInt.toString();
 
-                        print(
-                            'idSeller ==>> $idSeller, idProduct ==>> $idProduct, name ==>> $name, price ==>> $price, amount ==>> $amount, sum ==>> $sum');
-                        SQLiteModel sqLiteModel = SQLiteModel(
-                            idSeller: idSeller,
-                            idProduct: idProduct,
-                            name: name,
-                            price: price,
-                            amount: amount,
-                            sum: sum);
-                        await SQLiteHelper()
-                            .insertValueToSQLite(sqLiteModel)
-                            .then((value) {
-                          amountInt = 1;
-                          Navigator.pop(context);
-                        });
+                        if (currentIdSeller == idSeller) {
+                          print(
+                              'idSeller ==>> $idSeller, idProduct ==>> $idProduct, name ==>> $name, price ==>> $price, amount ==>> $amount, sum ==>> $sum');
+                          SQLiteModel sqLiteModel = SQLiteModel(
+                              idSeller: idSeller,
+                              idProduct: idProduct,
+                              name: name,
+                              price: price,
+                              amount: amount,
+                              sum: sum);
+                          await SQLiteHelper()
+                              .insertValueToSQLite(sqLiteModel)
+                              .then((value) {
+                            amountInt = 1;
+                            Navigator.pop(context);
+                          });
+                        } else {
+                          MyDialog().normalDialog(context, 'Wrong Shop!!!', 'กรุณาเลือกื้อสินค้าจากร้าน ${productModel.nameSeller} ให้เสร็จก่อนค่ะ');
+                        }
                       },
                       child: Text(
                         'Add Cart',
