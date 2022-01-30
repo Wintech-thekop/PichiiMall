@@ -306,7 +306,10 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
                             sum: sum);
                         await SQLiteHelper()
                             .insertValueToSQLite(sqLiteModel)
-                            .then((value) => Navigator.pop(context));
+                            .then((value) {
+                          amountInt = 1;
+                          Navigator.pop(context);
+                        });
                       },
                       child: Text(
                         'Add Cart',
