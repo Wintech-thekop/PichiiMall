@@ -27,19 +27,26 @@ class SQLiteHelper {
     );
   }
 
-  Future<Database> connectedDatabases() async {
+  Future<Database> connectedDatabase() async {
     return await openDatabase(join(await getDatabasesPath(), nameDatabase));
   }
 
   Future<List<SQLiteModel>> readSQLite() async {
-    Database database = await connectedDatabases();
-    List<SQLiteModel> result = [];
+    Database database = await connectedDatabase();
+    List<SQLiteModel> results = [];
     List<Map<String, dynamic>> maps = await database.query(tableDatabase);
     print(' maps on SQLiteHelper ==> $maps');
     for (var item in maps) {
       SQLiteModel model = SQLiteModel.fromMap(item);
-      result.add(model);
+      results.add(model);
     }
-    return result;
+    return results;
+  }
+
+  Future<Null> insertValueToSQLite(SQLiteModel sqLiteModel) async {
+    Database database = await connectedDatabase();
+    await database.insert(tableDatabase, sqLiteModel.toMap()).then(
+          (value) => print('### Insert Value name ==>> ${sqLiteModel.name}'),
+        );
   }
 }
