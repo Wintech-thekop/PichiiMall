@@ -310,7 +310,7 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
                         int sumInt = int.parse(price) * amountInt;
                         String sum = sumInt.toString();
 
-                        if (currentIdSeller == idSeller) {
+                        if ((currentIdSeller == idSeller)||(currentIdSeller == null)) {
                           print(
                               'idSeller ==>> $idSeller, idProduct ==>> $idProduct, name ==>> $name, price ==>> $price, amount ==>> $amount, sum ==>> $sum');
                           SQLiteModel sqLiteModel = SQLiteModel(
@@ -327,7 +327,10 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
                             Navigator.pop(context);
                           });
                         } else {
-                          MyDialog().normalDialog(context, 'Wrong Shop!!!', 'กรุณาเลือกื้อสินค้าจากร้าน ${productModel.nameSeller} ให้เสร็จก่อนค่ะ');
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                          MyDialog().normalDialog(context, 'Wrong Shop!!!', 'ไม่สามารถซื้อสินค้าจากร้าน ${productModel.nameSeller} ได้ \nกรุณาเลือกซื้อสินค้าที่ร้านเดิมให้เสร็จก่อนค่ะ');
+                       //Navigator.pop(context);
                         }
                       },
                       child: Text(
