@@ -209,7 +209,7 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
                           onPressed: () {
                             setState(() {
                               indexImage = 0;
-                              print('indexImage ==>> $indexImage');
+                              // print('indexImage ==>> $indexImage');
                             });
                           },
                           icon: Icon(Icons.filter_1)),
@@ -217,7 +217,7 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
                         onPressed: () {
                           setState(() {
                             indexImage = 1;
-                            print('indexImage ==>> $indexImage');
+                            // print('indexImage ==>> $indexImage');
                           });
                         },
                         icon: Icon(Icons.filter_2),
@@ -226,7 +226,7 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
                         onPressed: () {
                           setState(() {
                             indexImage = 2;
-                            print('indexImage ==>> $indexImage');
+                            // print('indexImage ==>> $indexImage');
                           });
                         },
                         icon: Icon(Icons.filter_3),
@@ -235,7 +235,7 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
                         onPressed: () {
                           setState(() {
                             indexImage = 3;
-                            print('indexImage ==>> $indexImage');
+                            // print('indexImage ==>> $indexImage');
                           });
                         },
                         icon: Icon(Icons.filter_4),
@@ -311,8 +311,8 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
                         String sum = sumInt.toString();
 
                         if ((currentIdSeller == idSeller)||(currentIdSeller == null)) {
-                          print(
-                              'idSeller ==>> $idSeller, idProduct ==>> $idProduct, name ==>> $name, price ==>> $price, amount ==>> $amount, sum ==>> $sum');
+                          // print(
+                              // 'idSeller ==>> $idSeller, idProduct ==>> $idProduct, name ==>> $name, price ==>> $price, amount ==>> $amount, sum ==>> $sum');
                           SQLiteModel sqLiteModel = SQLiteModel(
                               idSeller: idSeller,
                               idProduct: idProduct,
