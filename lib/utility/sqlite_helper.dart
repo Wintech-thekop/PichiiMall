@@ -35,7 +35,7 @@ class SQLiteHelper {
     Database database = await connectedDatabase();
     List<SQLiteModel> results = [];
     List<Map<String, dynamic>> maps = await database.query(tableDatabase);
-    print(' maps on SQLiteHelper ==> $maps');
+    // print(' maps on SQLiteHelper ==> $maps');
     for (var item in maps) {
       SQLiteModel model = SQLiteModel.fromMap(item);
       results.add(model);
@@ -48,5 +48,12 @@ class SQLiteHelper {
     await database.insert(tableDatabase, sqLiteModel.toMap()).then(
           (value) => print('### Insert Value name ==>> ${sqLiteModel.name}'),
         );
+  }
+
+  Future<Null> deleteSQLiteWhereId(int id) async {
+    Database database = await connectedDatabase();
+    await database
+        .delete(tableDatabase, where: '$columnId = $id')
+        .then((value) => print('### Success Delete id ==>> $id'));
   }
 }

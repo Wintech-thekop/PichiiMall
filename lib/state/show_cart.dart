@@ -33,6 +33,10 @@ class _ShowCartState extends State<ShowCart> {
   }
 
   Future<Null> processReadSQLite() async {
+    if (sqliteModels.isNotEmpty) {
+      sqliteModels.clear();
+    }
+
     await SQLiteHelper().readSQLite().then((value) {
       // print(' value on processReadSQLite ==> $value');
       setState(() {
@@ -82,38 +86,47 @@ class _ShowCartState extends State<ShowCart> {
                 shopSeller(),
                 buildHead(),
                 listProduct(),
-                Divider(
-                  color: MyConstant.dark,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 4,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          ShowTitle(
-                            title: 'Total: ',
-                            textStyle: MyConstant().h2BlueStyle(),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Row(mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ShowTitle(
-                            title: total == null ?  '' : total.toString(),
-                            textStyle: MyConstant().h1Style(),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                )
+                buildDivider(),
+                buildTotal()
               ],
             ),
+    );
+  }
+
+  Row buildTotal() {
+    return Row(
+      children: [
+        Expanded(
+          flex: 4,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              ShowTitle(
+                title: 'Total: ',
+                textStyle: MyConstant().h2BlueStyle(),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          flex: 2,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ShowTitle(
+                title: total == null ? '' : total.toString(),
+                textStyle: MyConstant().h1Style(),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Divider buildDivider() {
+    return Divider(
+      color: MyConstant.dark,
     );
   }
 
@@ -158,7 +171,13 @@ class _ShowCartState extends State<ShowCart> {
           Expanded(
             flex: 1,
             child: IconButton(
-              onPressed: () {},
+              onPressed: () async {
+                int idSQLite = sqliteModels[index].id!;
+                print('### Delete idSQLite ==>> $idSQLite');
+                await SQLiteHelper()
+                    .deleteSQLiteWhereId(idSQLite)
+                    .then((value) => processReadSQLite());
+              },
               icon: Icon(Icons.delete_forever_outlined, color: Colors.red[700]),
             ),
           ),
