@@ -22,6 +22,7 @@ class _ShowCartState extends State<ShowCart> {
   List<SQLiteModel> sqliteModels = [];
   bool load = true;
   UserModel? userModel;
+  int? total;
 
   @override
   void initState() {
@@ -33,13 +34,24 @@ class _ShowCartState extends State<ShowCart> {
 
   Future<Null> processReadSQLite() async {
     await SQLiteHelper().readSQLite().then((value) {
-      print(' value on processReadSQLite ==> $value');
+      // print(' value on processReadSQLite ==> $value');
       setState(() {
         load = false;
         sqliteModels = value;
         findDetailSeller();
+        calculateTotal();
       });
     });
+  }
+
+  void calculateTotal() async {
+    total = 0;
+    for (var item in sqliteModels) {
+      int sumInt = int.parse(item.sum.trim());
+      setState(() {
+        total = total! + sumInt;
+      });
+    }
   }
 
   Future<Null> findDetailSeller() async {
@@ -69,53 +81,89 @@ class _ShowCartState extends State<ShowCart> {
               children: [
                 shopSeller(),
                 buildHead(),
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: ScrollPhysics(),
-                  itemCount: sqliteModels.length,
-                  itemBuilder: (context, index) => Row(
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: ShowTitle(
-                          title: sqliteModels[index].name,
-                          textStyle: MyConstant().h3Style(),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: ShowTitle(
-                          title: sqliteModels[index].price,
-                          textStyle: MyConstant().h3Style(),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: ShowTitle(
-                          title: sqliteModels[index].amount,
-                          textStyle: MyConstant().h3Style(),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: ShowTitle(
-                          title: sqliteModels[index].sum,
-                          textStyle: MyConstant().h3Style(),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: IconButton(
-                          onPressed: () {},
-                          icon: Icon(Icons.delete_forever_outlined,
-                              color: Colors.red[700]),
-                        ),
-                      ),
-                    ],
-                  ),
+                listProduct(),
+                Divider(
+                  color: MyConstant.dark,
                 ),
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 4,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ShowTitle(
+                            title: 'Total: ',
+                            textStyle: MyConstant().h2BlueStyle(),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Row(mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ShowTitle(
+                            title: total == null ?  '' : total.toString(),
+                            textStyle: MyConstant().h1Style(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                )
               ],
             ),
+    );
+  }
+
+  ListView listProduct() {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: ScrollPhysics(),
+      itemCount: sqliteModels.length,
+      itemBuilder: (context, index) => Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8),
+              child: ShowTitle(
+                title: sqliteModels[index].name,
+                textStyle: MyConstant().h3Style(),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: ShowTitle(
+              title: sqliteModels[index].price,
+              textStyle: MyConstant().h3Style(),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: ShowTitle(
+              title: sqliteModels[index].amount,
+              textStyle: MyConstant().h3Style(),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: ShowTitle(
+              title: sqliteModels[index].sum,
+              textStyle: MyConstant().h3Style(),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.delete_forever_outlined, color: Colors.red[700]),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -128,9 +176,12 @@ class _ShowCartState extends State<ShowCart> {
           children: [
             Expanded(
               flex: 2,
-              child: ShowTitle(
-                title: 'Product',
-                textStyle: MyConstant().h2Style(),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: ShowTitle(
+                  title: 'Product',
+                  textStyle: MyConstant().h2Style(),
+                ),
               ),
             ),
             Expanded(
