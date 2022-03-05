@@ -8,6 +8,7 @@ import 'package:pichiimall/models/sqlite_model.dart';
 import 'package:pichiimall/models/user_model.dart';
 import 'package:pichiimall/utility/my_constant.dart';
 import 'package:pichiimall/utility/sqlite_helper.dart';
+import 'package:pichiimall/widgets/show_image.dart';
 import 'package:pichiimall/widgets/show_progress.dart';
 import 'package:pichiimall/widgets/show_title.dart';
 
@@ -80,16 +81,88 @@ class _ShowCartState extends State<ShowCart> {
       ),
       body: load
           ? ShowProgress()
-          : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                shopSeller(),
-                buildHead(),
-                listProduct(),
-                buildDivider(),
-                buildTotal()
-              ],
+          : sqliteModels.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.symmetric(vertical: 16),
+                        width: 200,
+                        child: ShowImage(path: MyConstant.image4),
+                      ),
+                      ShowTitle(
+                          title: 'Empty Cart',
+                          textStyle: MyConstant().h1Style()),
+                    ],
+                  ),
+                )
+              : buildContent(),
+    );
+  }
+
+  Column buildContent() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        shopSeller(),
+        buildHead(),
+        listProduct(),
+        buildDivider(),
+        buildTotal(),
+        buildDivider(),
+        buttonController(),
+      ],
+    );
+  }
+
+  Future<Null> confirmEmptyCart() async {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+          title: ListTile(
+            leading: ShowImage(path: MyConstant.image4),
+            title: ShowTitle(
+                title: 'คุณต้องการจะ Delete?',
+                textStyle: MyConstant().h2BlueStyle()),
+            subtitle: ShowTitle(
+                title: 'สินค้าทั้งหมดในตะกร้า ใช่ไหม?',
+                textStyle: MyConstant().h3Style()),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                await SQLiteHelper().emptySQLite().then((value) {
+                  Navigator.pop(context);
+                  processReadSQLite();
+                });
+              },
+              child: Text('Delete'),
             ),
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('Cancel'),
+            ),
+          ]),
+    );
+  }
+
+  Row buttonController() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        ElevatedButton(
+          onPressed: () {},
+          child: Text('Order'),
+        ),
+        Container(
+          margin: EdgeInsets.only(left: 4, right: 8),
+          child: ElevatedButton(
+            onPressed: () => confirmEmptyCart(),
+            child: Text('Empty Cart'),
+          ),
+        ),
+      ],
     );
   }
 

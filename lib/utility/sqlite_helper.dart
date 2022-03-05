@@ -56,4 +56,11 @@ class SQLiteHelper {
         .delete(tableDatabase, where: '$columnId = $id')
         .then((value) => print('### Success Delete id ==>> $id'));
   }
+
+  Future<Null> emptySQLite() async {
+    Database database = await connectedDatabase();
+    await database
+        .delete(tableDatabase)
+        .then((value) => print('### Success Empty SQLite'));
+  }
 }
