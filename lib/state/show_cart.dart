@@ -152,7 +152,9 @@ class _ShowCartState extends State<ShowCart> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, MyConstant.routeAddWallet);
+          },
           child: Text('Order'),
         ),
         Container(

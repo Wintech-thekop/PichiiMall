@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:pichiimall/state/add_product.dart';
+import 'package:pichiimall/state/add_wallet.dart';
 import 'package:pichiimall/state/authen.dart';
 import 'package:pichiimall/state/buyer_service.dart';
 import 'package:pichiimall/state/create_account.dart';
@@ -22,6 +23,7 @@ final Map<String, WidgetBuilder> map = {
   '/addProduct': (BuildContext context) => AddProduct(),
   '/editProfileSeller': (BuildContext context) => EditProfileSeller(),
   '/showCart': (BuildContext context) => ShowCart(),
+  '/addWallet': (BuildContext context) => AddWallet(),
 };
 
 String? initialRoute; // initialRoute can be null
