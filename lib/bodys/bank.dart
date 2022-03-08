@@ -27,9 +27,16 @@ class _BankState extends State<Bank> {
     );
   }
 
-  Card buildKbank() {
-    return Card(
-      child: ListTile(
+  Widget buildKbank() {
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 4,
+      ),
+      height: 100,
+      child: Center(
+        child: Card(color: Colors.green[100],
+          child: ListTile(
             leading: Container(
               width: 80,
               height: 80,
@@ -51,12 +58,21 @@ class _BankState extends State<Bank> {
               textStyle: MyConstant().h3Style(),
             ),
           ),
+        ),
+      ),
     );
   }
 
-  Card buildKTbank() {
-    return Card(
-      child: ListTile(
+  Widget buildKTbank() {
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 4,
+      ),
+      height: 100,
+      child: Center(
+        child: Card(color: Colors.lightBlue[100],
+          child: ListTile(
             leading: Container(
               width: 80,
               height: 80,
@@ -78,12 +94,21 @@ class _BankState extends State<Bank> {
               textStyle: MyConstant().h3Style(),
             ),
           ),
+        ),
+      ),
     );
   }
 
-  Card buildSCBbank() {
-    return Card(
-      child: ListTile(
+  Widget buildSCBbank() {
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 4,
+      ),
+      height: 100,
+      child: Center(
+        child: Card(color: Colors.purple.shade100,
+          child: ListTile(
             leading: Container(
               width: 80,
               height: 80,
@@ -105,6 +130,8 @@ class _BankState extends State<Bank> {
               textStyle: MyConstant().h3Style(),
             ),
           ),
+        ),
+      ),
     );
   }
 
