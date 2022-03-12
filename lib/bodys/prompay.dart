@@ -1,9 +1,13 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
+import 'package:file_utils/file_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pichiimall/utility/my_constant.dart';
 import 'package:pichiimall/utility/my_dialog.dart';
+import 'package:pichiimall/widgets/show_progress.dart';
 import 'package:pichiimall/widgets/show_title.dart';
 
 class Prompay extends StatefulWidget {
@@ -23,8 +27,40 @@ class _PrompayState extends State<Prompay> {
           children: [
             buildTitle(),
             buildCopyPrompay(),
+            buildQRcodePrompay(),
+            buildDownload(),
           ],
         ),
+      ),
+    );
+  }
+
+  ElevatedButton buildDownload() {
+    return ElevatedButton(
+      onPressed: () async {
+        String path = '/sdcard/download';
+        try {
+          await FileUtils.mkdir([path]);
+          await Dio().download(MyConstant.urlPrompay, '$path/prompay.png').then(
+              (value) => MyDialog().normalDialog(
+                  context,
+                  'Download Prompay Finish',
+                  'กรุณาไปที่แอพธนาคารของท่าน เพื่ออ่าน QR Code ที่โหลดมา'));
+        } catch (e) {
+          MyDialog().normalDialog(context, 'Storage Permission Denied',
+              'กรุณาเปิด Permission Storage ด้วยค่ะ');
+        }
+      },
+      child: Text('Download QRcode'),
+    );
+  }
+
+  Container buildQRcodePrompay() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 8),
+      child: CachedNetworkImage(
+        imageUrl: MyConstant.urlPrompay,
+        placeholder: (context, url) => ShowProgress(),
       ),
     );
   }
@@ -41,13 +77,13 @@ class _PrompayState extends State<Prompay> {
           ),
           subtitle: ShowTitle(
             title: 'บัญชีพร้อมเพย์',
-            textStyle: MyConstant().h2Style(),
+            textStyle: MyConstant().h3Style(),
           ),
           trailing: IconButton(
             onPressed: () {
               Clipboard.setData(ClipboardData(text: '0845503246'));
-              MyDialog().normalDialog(
-                  context, 'Copy Prompay success', 'Copy พร้อมเพย์สำเร็จแล้ว กรุณาไปที่แอพธนาคารของท่าน เพื่อโอนเงินผ่านระบบพร้อมเพย์ได้เลยค่ะ');
+              MyDialog().normalDialog(context, 'Copy Prompay success',
+                  'คัดลอกพร้อมเพย์สำเร็จแล้ว กรุณาไปที่แอพธนาคารของท่าน เพื่อโอนเงินผ่านระบบพร้อมเพย์ได้เลยค่ะ');
             },
             icon: Icon(
               Icons.copy,
@@ -62,7 +98,7 @@ class _PrompayState extends State<Prompay> {
   ShowTitle buildTitle() {
     return ShowTitle(
       title: 'การโอนเงินผ่านระบบ Prompay',
-      textStyle: MyConstant().h2Style(),
+      textStyle: MyConstant().h1Style(),
     );
   }
 }
