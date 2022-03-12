@@ -7,7 +7,7 @@ class MyConstant {
 
   static String appName = "Phichii Mall";
   static String domain =
-      "https://30f5-2001-fb1-156-6b73-6a-96ab-4512-9dd.ngrok.io";
+      "https://6180-171-98-133-47.ngrok.io";
   static String urlPrompay = "https://promptpay.io/0845503246.png";
 
   //Routes
