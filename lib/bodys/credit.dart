@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:pichiimall/utility/my_constant.dart';
 import 'package:pichiimall/widgets/show_title.dart';
 
@@ -12,6 +13,20 @@ class Credit extends StatefulWidget {
 }
 
 class _CreditState extends State<Credit> {
+  String? name,
+      surname,
+      idCard,
+      expiresDateMonth,
+      expiresDateYear,
+      cvc,
+      amount,
+      stringExpiresDate;
+  MaskTextInputFormatter idCardMask =
+      MaskTextInputFormatter(mask: '####-####-####-####');
+  MaskTextInputFormatter expiresDateMask =
+      MaskTextInputFormatter(mask: '##/####');
+  MaskTextInputFormatter cvcMask = MaskTextInputFormatter(mask: '###');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,12 +53,20 @@ class _CreditState extends State<Credit> {
 
   Container buildButtonAddMoney() {
     return Container(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {},
-              child: Text('Add Money'),
-            ),
-          );
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () {
+          expiresDateMonth = stringExpiresDate?.substring(0, 2);
+          expiresDateYear = stringExpiresDate?.substring(2, 6);
+          print('idcard Value ==>> $idCard');
+          print('expiresDate Value ==>> $stringExpiresDate');
+          print('expiresDateMonth Value ==>> $expiresDateMonth');
+          print('expiresDateYear Value ==>> $expiresDateYear');
+          print('CVC Value ==>> $cvc');
+        },
+        child: Text('Add Money'),
+      ),
+    );
   }
 
   Widget formAmount() {
@@ -96,6 +119,10 @@ class _CreditState extends State<Credit> {
 
   Widget formExpiresDate() {
     return TextFormField(
+      onChanged: (value) {
+        stringExpiresDate = expiresDateMask.getUnmaskedText();
+      },
+      inputFormatters: [expiresDateMask],
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
         hintText: 'xx/xxxx',
@@ -108,6 +135,10 @@ class _CreditState extends State<Credit> {
 
   Widget formCVC() {
     return TextFormField(
+      onChanged: (value) {
+        cvc = cvcMask.getUnmaskedText();
+      },
+      inputFormatters: [cvcMask],
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
         hintText: 'xxx',
@@ -122,6 +153,11 @@ class _CreditState extends State<Credit> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: TextFormField(
+        inputFormatters: [idCardMask],
+        onChanged: (value) {
+//          idCard = value.trim();
+          idCard = idCardMask.getUnmaskedText();
+        },
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
           hintText: 'xxxx-xxxx-xxxx-xxxx',
