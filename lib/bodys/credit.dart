@@ -27,25 +27,41 @@ class _CreditState extends State<Credit> {
       MaskTextInputFormatter(mask: '##/####');
   MaskTextInputFormatter cvcMask = MaskTextInputFormatter(mask: '###');
 
+  var formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
         behavior: HitTestBehavior.opaque,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            buildTitle('Name Surname'),
-            buildNameSurname(),
-            buildTitle('ID Card No.'),
-            formIDCard(),
-            buildExpiresCVC(),
-            buildTitle('Amount : '),
-            formAmount(),
-            Spacer(),
-            buildButtonAddMoney(),
-          ],
+        child: Form(
+          key: formKey,
+          child: Stack(
+            children: [
+              SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    buildTitle('Name Surname'),
+                    buildNameSurname(),
+                    buildTitle('ID Card No.'),
+                    formIDCard(),
+                    buildExpiresCVC(),
+                    buildTitle('Amount : '),
+                    formAmount(),
+                    // Spacer(),
+                  ],
+                ),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  buildButtonAddMoney(),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -56,13 +72,15 @@ class _CreditState extends State<Credit> {
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
-          expiresDateMonth = stringExpiresDate?.substring(0, 2);
-          expiresDateYear = stringExpiresDate?.substring(2, 6);
-          print('idcard Value ==>> $idCard');
-          print('expiresDate Value ==>> $stringExpiresDate');
-          print('expiresDateMonth Value ==>> $expiresDateMonth');
-          print('expiresDateYear Value ==>> $expiresDateYear');
-          print('CVC Value ==>> $cvc');
+          if (formKey.currentState!.validate()) {
+            expiresDateMonth = stringExpiresDate?.substring(0, 2);
+            expiresDateYear = stringExpiresDate?.substring(2, 6);
+            print('idcard Value ==>> $idCard');
+            print('expiresDate Value ==>> $stringExpiresDate');
+            print('expiresDateMonth Value ==>> $expiresDateMonth');
+            print('expiresDateYear Value ==>> $expiresDateYear');
+            print('CVC Value ==>> $cvc');
+          }
         },
         child: Text('Add Money'),
       ),
@@ -73,6 +91,13 @@ class _CreditState extends State<Credit> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: TextFormField(
+        validator: (value) {
+          if (value!.isEmpty) {
+            return 'Please fill Amount in blank';
+          } else {
+            return null;
+          }
+        },
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
           suffix: ShowTitle(
@@ -119,6 +144,15 @@ class _CreditState extends State<Credit> {
 
   Widget formExpiresDate() {
     return TextFormField(
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Please fill Expires Date in blank';
+        } else if (stringExpiresDate!.length != 6) {
+          return 'Please fill correctly';
+        } else {
+          return null;
+        }
+      },
       onChanged: (value) {
         stringExpiresDate = expiresDateMask.getUnmaskedText();
       },
@@ -135,6 +169,15 @@ class _CreditState extends State<Credit> {
 
   Widget formCVC() {
     return TextFormField(
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Please fill CVC number in blank';
+        } else if (cvc!.length != 3) {
+          return 'Please fill correctly';
+        } else {
+          return null;
+        }
+      },
       onChanged: (value) {
         cvc = cvcMask.getUnmaskedText();
       },
@@ -153,6 +196,15 @@ class _CreditState extends State<Credit> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: TextFormField(
+        validator: (value) {
+          if (value!.isEmpty) {
+            return 'Please fill ID card in blank';
+          } else if (idCard!.length != 16) {
+            return 'ID card No. must has 16 charaters';
+          } else {
+            return null;
+          }
+        },
         inputFormatters: [idCardMask],
         onChanged: (value) {
 //          idCard = value.trim();
@@ -191,6 +243,13 @@ class _CreditState extends State<Credit> {
   Widget formName() {
     return Expanded(
       child: TextFormField(
+        validator: (value) {
+          if (value!.isEmpty) {
+            return 'Please fill Name in blank';
+          } else {
+            return null;
+          }
+        },
         decoration: InputDecoration(
           label: ShowTitle(title: 'Name : '),
           border: OutlineInputBorder(
@@ -204,6 +263,13 @@ class _CreditState extends State<Credit> {
   Widget formSurname() {
     return Expanded(
       child: TextFormField(
+        validator: (value) {
+          if (value!.isEmpty) {
+            return 'Please fill Surname in blank';
+          } else {
+            return null;
+          }
+        },
         decoration: InputDecoration(
           label: ShowTitle(title: 'Surname : '),
           border: OutlineInputBorder(
