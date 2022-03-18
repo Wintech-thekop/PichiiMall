@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:omise_flutter/omise_flutter.dart';
 import 'package:pichiimall/utility/my_constant.dart';
 import 'package:pichiimall/widgets/show_title.dart';
 
@@ -73,18 +74,33 @@ class _CreditState extends State<Credit> {
       child: ElevatedButton(
         onPressed: () {
           if (formKey.currentState!.validate()) {
-            expiresDateMonth = stringExpiresDate?.substring(0, 2);
-            expiresDateYear = stringExpiresDate?.substring(2, 6);
-            print('idcard Value ==>> $idCard');
-            print('expiresDate Value ==>> $stringExpiresDate');
-            print('expiresDateMonth Value ==>> $expiresDateMonth');
-            print('expiresDateYear Value ==>> $expiresDateYear');
-            print('CVC Value ==>> $cvc');
+            getTokenAndChargeOmise();
           }
         },
         child: Text('Add Money'),
       ),
     );
+  }
+
+  Future<Null> getTokenAndChargeOmise() async {
+    String publicKey = MyConstant.omisePublicKey;
+
+    // print('name ==>> $name, surname ==>> $surname');
+    // print('publicKey ==>> $publicKey');
+    // print('idcard Value ==>> $idCard');
+    // print('expiresDate Value ==>> $stringExpiresDate');
+    // print('expiresDateMonth Value ==>> $expiresDateMonth');
+    // print('expiresDateYear Value ==>> $expiresDateYear');
+    // print('CVC Value ==>> $cvc');
+
+    OmiseFlutter omiseFlutter = OmiseFlutter(publicKey);
+    await omiseFlutter.token
+        .create('$name $surname', idCard!, expiresDateMonth!, expiresDateYear!,
+            cvc!)
+        .then((value) {
+      String token = value.id.toString();
+      print('token Value ==>> $token');
+    });
   }
 
   Widget formAmount() {
@@ -150,7 +166,17 @@ class _CreditState extends State<Credit> {
         } else if (stringExpiresDate!.length != 6) {
           return 'Please fill correctly';
         } else {
-          return null;
+          expiresDateMonth = stringExpiresDate?.substring(0, 2);
+          expiresDateYear = stringExpiresDate?.substring(2, 6);
+
+          int intExpiresDateMonth = int.parse(expiresDateMonth!);
+          expiresDateMonth = intExpiresDateMonth.toString();
+
+          if (intExpiresDateMonth > 12) {
+            return 'Month lower than 12';
+          } else {
+            return null;
+          }
         }
       },
       onChanged: (value) {
@@ -247,6 +273,7 @@ class _CreditState extends State<Credit> {
           if (value!.isEmpty) {
             return 'Please fill Name in blank';
           } else {
+            name = value.trim();
             return null;
           }
         },
@@ -267,6 +294,7 @@ class _CreditState extends State<Credit> {
           if (value!.isEmpty) {
             return 'Please fill Surname in blank';
           } else {
+            surname = value.trim();
             return null;
           }
         },
