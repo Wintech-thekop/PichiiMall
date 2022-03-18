@@ -6,6 +6,8 @@ import 'package:omise_flutter/omise_flutter.dart';
 import 'package:pichiimall/utility/my_constant.dart';
 import 'package:pichiimall/widgets/show_title.dart';
 
+import '../utility/my_dialog.dart';
+
 class Credit extends StatefulWidget {
   const Credit({Key? key}) : super(key: key);
 
@@ -100,6 +102,10 @@ class _CreditState extends State<Credit> {
         .then((value) {
       String token = value.id.toString();
       print('token Value ==>> $token');
+    }).catchError((value) {
+      String title = value.code;
+      String message = value.message;
+      MyDialog().normalDialog(context, title, message);
     });
   }
 
