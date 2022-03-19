@@ -1,7 +1,9 @@
 // ignore_for_file: prefer_const_constructors, prefer_if_null_operators
 
 import 'dart:io';
+import 'dart:math';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
@@ -10,6 +12,7 @@ import 'package:pichiimall/widgets/show_image.dart';
 import 'package:pichiimall/widgets/show_title.dart';
 
 import '../utility/my_constant.dart';
+import '../utility/my_dialog.dart';
 
 class ConfirmAddWallet extends StatefulWidget {
   const ConfirmAddWallet({Key? key}) : super(key: key);
@@ -85,10 +88,34 @@ class _ConfirmAddWalletState extends State<ConfirmAddWallet> {
     return Container(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          if (file == null) {
+            MyDialog().normalDialog(context, 'There is no image',
+                'Please take a photo or select from gallery');
+          } else {
+            processUploadAndInsertData();
+          }
+        },
         child: Text('Confirm Add Wallet'),
       ),
     );
+  }
+
+  Future<Null> processUploadAndInsertData() async {
+    String apiSaveSlip = '${MyConstant.domain}/pichiimall/saveSlip.php';
+    String nameSlip = 'slip${Random().nextInt(1000000)}.jpg';
+    MyDialog().showProgressDialog(context);
+
+    try {
+      Map<String, dynamic> map = {};
+      map['file'] =
+          await MultipartFile.fromFile(file!.path, filename: nameSlip);
+      FormData data = FormData.fromMap(map);
+      await Dio().post(apiSaveSlip, data: data).then((value) {
+        print(value);
+        Navigator.pop(context);
+      });
+    } catch (e) {}
   }
 
   Row newImages() {
@@ -105,7 +132,9 @@ class _ConfirmAddWalletState extends State<ConfirmAddWallet> {
         Container(
           width: 200,
           height: 200,
-          child: file == null ? ShowImage(path: 'images/bill.png'): Image.file(file!),
+          child: file == null
+              ? ShowImage(path: 'images/bill.png')
+              : Image.file(file!),
         ),
         IconButton(
             onPressed: () {
