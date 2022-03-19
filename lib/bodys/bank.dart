@@ -5,6 +5,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:pichiimall/utility/my_constant.dart';
 import 'package:pichiimall/widgets/show_title.dart';
 
+import '../widgets/nav_confirm_add_wallet.dart';
+
 class Bank extends StatefulWidget {
   const Bank({Key? key}) : super(key: key);
 
@@ -23,7 +25,7 @@ class _BankState extends State<Bank> {
           buildKTbank(),
           buildSCBbank(),
         ],
-      ),
+      ),floatingActionButton: NavConfirmAddWallet(),
     );
   }
 

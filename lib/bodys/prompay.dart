@@ -10,6 +10,8 @@ import 'package:pichiimall/utility/my_dialog.dart';
 import 'package:pichiimall/widgets/show_progress.dart';
 import 'package:pichiimall/widgets/show_title.dart';
 
+import '../widgets/nav_confirm_add_wallet.dart';
+
 class Prompay extends StatefulWidget {
   const Prompay({Key? key}) : super(key: key);
 
@@ -31,7 +33,7 @@ class _PrompayState extends State<Prompay> {
             buildDownload(),
           ],
         ),
-      ),
+      ),floatingActionButton: NavConfirmAddWallet(),
     );
   }
 

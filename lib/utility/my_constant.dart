@@ -7,7 +7,7 @@ class MyConstant {
 
   static String appName = "Phichii Mall";
   static String domain =
-      "https://d73f-2001-fb1-156-ad3f-cad-2e1d-336c-18e6.ngrok.io";
+      "https://e4a1-2001-fb1-156-ad3f-cad-2e1d-336c-18e6.ngrok.io";
   static String urlPrompay = "https://promptpay.io/0845503246.png";
   static String omisePublicKey = 'pkey_test_5r5y6n0rlmbrsej2d9y';
   static String omiseSecretKey = 'skey_test_5r5y6n0rto3ugj7dpau';
@@ -23,6 +23,7 @@ class MyConstant {
   static String routeEditProfileSeller = "/editProfileSeller";
   static String routeShowCart = "/showCart";
   static String routeAddWallet = "/addWallet";
+  static String routeConfirmAddWallet = "/confirmAddWallet";
 
   // Images
   static String image1 = 'images/image1.png';
