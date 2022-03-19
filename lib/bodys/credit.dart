@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:omise_flutter/omise_flutter.dart';
@@ -7,6 +9,8 @@ import 'package:pichiimall/utility/my_constant.dart';
 import 'package:pichiimall/widgets/show_title.dart';
 
 import '../utility/my_dialog.dart';
+
+import 'package:http/http.dart' as http;
 
 class Credit extends StatefulWidget {
   const Credit({Key? key}) : super(key: key);
@@ -99,9 +103,39 @@ class _CreditState extends State<Credit> {
     await omiseFlutter.token
         .create('$name $surname', idCard!, expiresDateMonth!, expiresDateYear!,
             cvc!)
-        .then((value) {
+        .then((value) async {
       String token = value.id.toString();
       print('token Value ==>> $token');
+
+      String secretKey = MyConstant.omiseSecretKey;
+      String urlAPI = MyConstant.omiseChargeUrl;
+      String basicAuth = 'Basic ' + base64Encode(utf8.encode(secretKey + ":"));
+
+      Map<String, String> headerMap = {};
+      headerMap['authorization'] = basicAuth;
+      headerMap['Cache-Control'] = 'no-cache';
+      headerMap['Content-Type'] = 'application/x-www-form-urlencoded';
+
+      String zero = '00';
+      amount = '$amount$zero';
+      print('amount ==> $amount');
+
+      Map<String, dynamic> data = {};
+      data['amount'] = amount;
+      data['currency'] = 'thb';
+      data['card'] = token;
+
+      Uri uri = Uri.parse(urlAPI);
+
+      http.Response response = await http.post(
+        uri,
+        headers: headerMap,
+        body: data,
+      );
+      var resultCharge = json.decode(response.body);
+      // print('resultCharge ==> $resultCharge');
+
+      print('Status ของการตัดบัตร--->>> ${resultCharge['status']}');
     }).catchError((value) {
       String title = value.code;
       String message = value.message;
@@ -117,6 +151,7 @@ class _CreditState extends State<Credit> {
           if (value!.isEmpty) {
             return 'Please fill Amount in blank';
           } else {
+            amount = value.trim();
             return null;
           }
         },
