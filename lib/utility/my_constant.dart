@@ -7,7 +7,7 @@ class MyConstant {
 
   static String appName = "Phichii Mall";
   static String domain =
-      "https://18d3-171-98-197-152.ngrok.io";
+      "https://9598-2001-fb1-156-ad3f-ddd0-7d7f-9dd6-9961.ngrok.io";
   static String urlPrompay = "https://promptpay.io/0845503246.png";
   static String omisePublicKey = 'pkey_test_5r5y6n0rlmbrsej2d9y';
   static String omiseSecretKey = 'skey_test_5r5y6n0rto3ugj7dpau';
@@ -49,11 +49,37 @@ class MyConstant {
     800: Color.fromRGBO(255, 180, 0, 0.9),
     900: Color.fromRGBO(255, 180, 0, 1.0),
   };
+  //Background
+
+  BoxDecoration planBackground() =>
+      BoxDecoration(color: MyConstant.light.withOpacity(0.75));
+
+  BoxDecoration gradientLinearBackground() => BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Colors.white, MyConstant.primary, MyConstant.dark],
+        ),
+      );
+
+  BoxDecoration gradientRadioBackground() => BoxDecoration(
+        gradient: RadialGradient(
+          center: Alignment(0, -0.5),
+          radius: 1.5,
+          colors: [Colors.white, MyConstant.primary],
+        ),
+      );
 
   // Text style
   TextStyle h1Style() => TextStyle(
         fontSize: 24,
         color: dark,
+        fontWeight: FontWeight.bold,
+      );
+
+  TextStyle h1WhiteStyle() => TextStyle(
+        fontSize: 24,
+        color: Colors.white,
         fontWeight: FontWeight.bold,
       );
 

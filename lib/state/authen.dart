@@ -35,15 +35,19 @@ class _AuthenState extends State<Authen> {
           behavior: HitTestBehavior.opaque,
           child: Form(
             key: formKey,
-            child: ListView(
-              children: [
-                buildImage(size),
-                buildAppName(),
-                buildUser(size),
-                buildPassword(size),
-                buildLogin(size),
-                buildCreateAccount(),
-              ],
+            child: Container(
+              // decoration: MyConstant().planBackground(),
+              decoration: MyConstant().gradientRadioBackground(),
+              child: ListView(
+                children: [
+                  buildImage(size),
+                  buildAppName(),
+                  buildUser(size),
+                  buildPassword(size),
+                  buildLogin(size),
+                  buildCreateAccount(),
+                ],
+              ),
             ),
           ),
         ),
@@ -144,7 +148,8 @@ class _AuthenState extends State<Authen> {
       children: [
         Container(
           margin: EdgeInsets.only(top: 16),
-          width: size * 0.6, // กำหนดความกว้างของรูปภาพเป็น 60% ของหน้าจอ
+          width: size * 0.6,
+          height: 40, // กำหนดความกว้างของรูปภาพเป็น 60% ของหน้าจอ
           child: TextFormField(
             controller: passwordController,
             validator: (value) {
@@ -156,6 +161,9 @@ class _AuthenState extends State<Authen> {
             },
             obscureText: statusRedEye, // การทำให้เป็นดอกจันทร์
             decoration: InputDecoration(
+              contentPadding: EdgeInsets.symmetric(vertical: 4),
+              filled: true,
+              fillColor: Colors.white.withOpacity(0.75),
               suffixIcon: IconButton(
                 onPressed: () {
                   setState(
@@ -205,7 +213,8 @@ class _AuthenState extends State<Authen> {
       children: [
         Container(
           margin: EdgeInsets.only(top: 15),
-          width: size * 0.6, // กำหนดความกว้างของรูปภาพเป็น 60% ของหน้าจอ
+          width: size * 0.6,
+          height: 40, // กำหนดความกว้างของรูปภาพเป็น 60% ของหน้าจอ
           child: TextFormField(
             controller: userController,
             validator: (value) {
@@ -216,6 +225,9 @@ class _AuthenState extends State<Authen> {
               }
             },
             decoration: InputDecoration(
+              contentPadding: EdgeInsets.symmetric(vertical: 4),
+              filled: true,
+              fillColor: Colors.white.withOpacity(0.75),
               labelText: 'User :',
               labelStyle: MyConstant().h3Style(),
               prefixIcon: Icon(
