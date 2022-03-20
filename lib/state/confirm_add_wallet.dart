@@ -173,14 +173,21 @@ class _ConfirmAddWalletState extends State<ConfirmAddWallet> {
         var status = 'WaitOrder';
         var urlAPIinsert =
             '${MyConstant.domain}/pichiimall/insertWallet.php?idAdd=true&idBuyer=$idBuyer&datePay=$dateTimeStr&money=${moneyController.text.trim()}&pathSlip=$pathSlip&status=$status';
-        await Dio().get(urlAPIinsert).then((value) => MyDialog().actionDialog(
+        await Dio().get(urlAPIinsert).then(
+              (value) => MyDialog(funcAction: success).actionDialog(
                 context,
                 'Confirm Success',
-                'Confirm Add money to Wallet Success', (){
-              Navigator.pop(context);
-            }));
+                'Confirm Add money to Wallet Success',
+              ),
+            );
       });
     } catch (e) {}
+  }
+
+  void success() {
+    Navigator.pushNamedAndRemoveUntil(
+        context, MyConstant.routeBuyerService, (route) => false);
+    print('Add wallet success');
   }
 
   Row newImages() {

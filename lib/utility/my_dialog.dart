@@ -9,7 +9,10 @@ import 'package:pichiimall/widgets/show_image.dart';
 import 'package:pichiimall/widgets/show_title.dart';
 
 class MyDialog {
-  
+  final Function()? funcAction;
+
+  MyDialog({this.funcAction});
+
   Future<Null> showProgressDialog(BuildContext context) async {
     // การทำ Circular Progress Indicator
     showDialog(
@@ -26,8 +29,7 @@ class MyDialog {
       ),
     );
   }
-  
-  
+
   Future<Null> alertLocationService(
       BuildContext context, String title, String message) async {
     showDialog(
@@ -46,7 +48,6 @@ class MyDialog {
               await Geolocator.openLocationSettings();
               exit(0); // ปิดแอพเราทิ้งไป
             },
-
             child: Text('OK'),
           )
         ],
@@ -76,7 +77,10 @@ class MyDialog {
   }
 
   Future<Null> actionDialog(
-      BuildContext context, String title, String message, Function action) async {
+    BuildContext context,
+    String title,
+    String message,
+  ) async {
     showDialog(
       context: context,
       builder: (context) => SimpleDialog(
@@ -88,7 +92,7 @@ class MyDialog {
         ),
         children: [
           TextButton(
-            onPressed: () => action,
+            onPressed: funcAction,
             child: Text('OK'),
           ),
         ],
@@ -96,4 +100,3 @@ class MyDialog {
     );
   }
 }
-
