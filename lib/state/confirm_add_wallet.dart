@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:pichiimall/widgets/show_image.dart';
 import 'package:pichiimall/widgets/show_title.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utility/my_constant.dart';
 import '../utility/my_dialog.dart';
@@ -28,12 +29,21 @@ class _ConfirmAddWalletState extends State<ConfirmAddWallet> {
   File? file;
   var formKey = GlobalKey<FormState>();
 
+  String? idBuyer;
+  TextEditingController moneyController = TextEditingController();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
     findCurrentTime();
+    findIdBuyer();
+  }
+
+  Future<void> findIdBuyer() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    idBuyer = preferences.getString('id');
   }
 
   void findCurrentTime() {
@@ -88,6 +98,7 @@ class _ConfirmAddWalletState extends State<ConfirmAddWallet> {
         Container(
           width: 250,
           child: TextFormField(
+            controller: moneyController,
             keyboardType: TextInputType.number,
             validator: (value) {
               if (value!.isEmpty) {
@@ -143,6 +154,7 @@ class _ConfirmAddWalletState extends State<ConfirmAddWallet> {
   }
 
   Future<Null> processUploadAndInsertData() async {
+    // upload Image to Server
     String apiSaveSlip = '${MyConstant.domain}/pichiimall/saveSlip.php';
     String nameSlip = 'slip${Random().nextInt(1000000)}.jpg';
     MyDialog().showProgressDialog(context);
@@ -152,9 +164,21 @@ class _ConfirmAddWalletState extends State<ConfirmAddWallet> {
       map['file'] =
           await MultipartFile.fromFile(file!.path, filename: nameSlip);
       FormData data = FormData.fromMap(map);
-      await Dio().post(apiSaveSlip, data: data).then((value) {
+      await Dio().post(apiSaveSlip, data: data).then((value) async {
         print(value);
         Navigator.pop(context);
+
+        // insert value to mySQL
+        var pathSlip = '/slip/$nameSlip';
+        var status = 'WaitOrder';
+        var urlAPIinsert =
+            '${MyConstant.domain}/pichiimall/insertWallet.php?idAdd=true&idBuyer=$idBuyer&datePay=$dateTimeStr&money=${moneyController.text.trim()}&pathSlip=$pathSlip&status=$status';
+        await Dio().get(urlAPIinsert).then((value) => MyDialog().actionDialog(
+                context,
+                'Confirm Success',
+                'Confirm Add money to Wallet Success', (){
+              Navigator.pop(context);
+            }));
       });
     } catch (e) {}
   }
