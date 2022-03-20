@@ -26,6 +26,7 @@ class _ConfirmAddWalletState extends State<ConfirmAddWallet> {
   // late File file;
   String? dateTimeStr;
   File? file;
+  var formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -57,17 +58,55 @@ class _ConfirmAddWalletState extends State<ConfirmAddWallet> {
               : Icon(Icons.arrow_back),
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          newHeader(),
-          newDateTime(),
-          Spacer(),
-          newImages(),
-          Spacer(),
-          newButtonConfirm(),
-        ],
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+        behavior: HitTestBehavior.opaque,
+        child: Form(
+          key: formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              newHeader(),
+              newDateTime(),
+              Spacer(),
+              newMoney(),
+              Spacer(),
+              newImages(),
+              Spacer(),
+              newButtonConfirm(),
+            ],
+          ),
+        ),
       ),
+    );
+  }
+
+  Row newMoney() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: 250,
+          child: TextFormField(
+            keyboardType: TextInputType.number,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Please Fill Money';
+              } else {
+                return null;
+              }
+            },
+            decoration: InputDecoration(
+              suffix: ShowTitle(
+                title: 'THB.',
+                textStyle: MyConstant().h2RedStyle(),
+              ),
+              label: ShowTitle(title: 'Money : '),
+              border: OutlineInputBorder(),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -89,11 +128,13 @@ class _ConfirmAddWalletState extends State<ConfirmAddWallet> {
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
-          if (file == null) {
-            MyDialog().normalDialog(context, 'There is no image',
-                'Please take a photo or select from gallery');
-          } else {
-            processUploadAndInsertData();
+          if (formKey.currentState!.validate()) {
+            if (file == null) {
+              MyDialog().normalDialog(context, 'There is no image',
+                  'Please take a photo or select from gallery');
+            } else {
+              processUploadAndInsertData();
+            }
           }
         },
         child: Text('Confirm Add Wallet'),

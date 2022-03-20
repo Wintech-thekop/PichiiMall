@@ -7,7 +7,7 @@ class MyConstant {
 
   static String appName = "Phichii Mall";
   static String domain =
-      "https://1057-2001-fb1-156-ad3f-a56f-601f-41a0-5f3d.ngrok.io";
+      "https://361e-2001-fb1-156-ad3f-7943-a8ec-a17-f7d7.ngrok.io";
   static String urlPrompay = "https://promptpay.io/0845503246.png";
   static String omisePublicKey = 'pkey_test_5r5y6n0rlmbrsej2d9y';
   static String omiseSecretKey = 'skey_test_5r5y6n0rto3ugj7dpau';
