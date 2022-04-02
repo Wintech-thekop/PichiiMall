@@ -7,7 +7,7 @@ class MyConstant {
 
   static String appName = "Phichii Mall";
   static String domain =
-      "https://167a-171-98-228-212.ngrok.io";
+      "https://5c21-2001-fb1-157-1399-81a5-12dd-e04a-9ec.ngrok.io";
   static String urlPrompay = "https://promptpay.io/0845503246.png";
   static String omisePublicKey = 'pkey_test_5r5y6n0rlmbrsej2d9y';
   static String omiseSecretKey = 'skey_test_5r5y6n0rto3ugj7dpau';
@@ -80,6 +80,11 @@ class MyConstant {
   TextStyle h1WhiteStyle() => TextStyle(
         fontSize: 24,
         color: Colors.white,
+        fontWeight: FontWeight.bold,
+      );
+      TextStyle h1RedStyle() => TextStyle(
+        fontSize: 24,
+        color: Colors.red.shade900,
         fontWeight: FontWeight.bold,
       );
 
