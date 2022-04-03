@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pichiimall/models/wallet_model.dart';
+import 'package:pichiimall/utility/my_constant.dart';
 import 'package:pichiimall/widgets/show_title.dart';
+
+import '../widgets/show_list_wallet.dart';
 
 class Approved extends StatefulWidget {
   final List<WalletModel> walletModels;
@@ -25,9 +28,12 @@ class _ApprovedState extends State<Approved> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ShowTitle(
-        title: 'This is Approved',
-      ),
+      body: approvedWalletModels?.isEmpty ?? true
+          ? ShowTitle(
+              title: 'No Money approve', textStyle: MyConstant().h1Style())
+          : ShowListWallet(
+              WalletModels: approvedWalletModels,
+            ),
     );
   }
 }
