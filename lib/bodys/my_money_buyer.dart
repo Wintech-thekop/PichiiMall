@@ -36,6 +36,10 @@ class _MyMoneyBuyerState extends State<MyMoneyBuyer> {
   int waitApproveWallet = 0;
   bool load = true;
 
+  // List<WalletModel> approvedWalletModels = [];
+  var approvedWalletModels = <WalletModel>[];
+  var waitWalletModels = <WalletModel>[];
+
   @override
   void initState() {
     // TODO: implement initState
@@ -58,10 +62,12 @@ class _MyMoneyBuyerState extends State<MyMoneyBuyer> {
         switch (model.status) {
           case 'Approved':
             approvedWallet = approvedWallet + int.parse(model.money);
+            approvedWalletModels.add(model);
             break;
 
           case 'WaitOrder':
             waitApproveWallet = waitApproveWallet + int.parse(model.money);
+            waitWalletModels.add(model);
             break;
           default:
             break;
@@ -70,9 +76,14 @@ class _MyMoneyBuyerState extends State<MyMoneyBuyer> {
       // print('approvedWallet ==> $approvedWallet');
       // print('waitApproveWallet ==> $waitApproveWallet');
 
-      widgets.add(Wallet(approveWallet: approvedWallet, waitApproveWallet: waitApproveWallet));
-      widgets.add(Approved());
-      widgets.add(Waiting());
+      widgets.add(Wallet(
+          approveWallet: approvedWallet, waitApproveWallet: waitApproveWallet));
+      widgets.add(Approved(
+        walletModels: approvedWalletModels,
+      ));
+      widgets.add(Waiting(
+        walletModels: waitWalletModels,
+      ));
 
       setState(() {
         load = false;
