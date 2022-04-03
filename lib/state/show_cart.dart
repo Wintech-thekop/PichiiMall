@@ -9,6 +9,7 @@ import 'package:pichiimall/models/user_model.dart';
 import 'package:pichiimall/utility/my_constant.dart';
 import 'package:pichiimall/utility/sqlite_helper.dart';
 import 'package:pichiimall/widgets/show_image.dart';
+import 'package:pichiimall/widgets/show_no_data.dart';
 import 'package:pichiimall/widgets/show_progress.dart';
 import 'package:pichiimall/widgets/show_title.dart';
 
@@ -82,30 +83,17 @@ class _ShowCartState extends State<ShowCart> {
       body: load
           ? ShowProgress()
           : sqliteModels.isEmpty
-              ? Container(
-                  decoration: MyConstant().gradientLinearBackground(),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.symmetric(vertical: 16),
-                          width: 200,
-                          child: ShowImage(path: MyConstant.image4),
-                        ),
-                        ShowTitle(
-                            title: 'Empty Cart',
-                            textStyle: MyConstant().h1WhiteStyle()),
-                      ],
-                    ),
-                  ),
+              ? ShowNoData(
+                  title: 'Empty Cart',
+                  pathImage: MyConstant.image4,
                 )
               : buildContent(),
     );
   }
 
   Widget buildContent() {
-    return Container(decoration: MyConstant().gradientLinearBackground(),
+    return Container(
+      decoration: MyConstant().gradientLinearBackground(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

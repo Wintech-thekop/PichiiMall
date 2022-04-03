@@ -8,6 +8,7 @@ import 'package:pichiimall/bodys/approved.dart';
 import 'package:pichiimall/bodys/waitting.dart';
 import 'package:pichiimall/bodys/wallet.dart';
 import 'package:pichiimall/utility/my_constant.dart';
+import 'package:pichiimall/widgets/show_no_data.dart';
 import 'package:pichiimall/widgets/show_progress.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -35,6 +36,7 @@ class _MyMoneyBuyerState extends State<MyMoneyBuyer> {
   int approvedWallet = 0;
   int waitApproveWallet = 0;
   bool load = true;
+  bool? haveWallet;
 
   // List<WalletModel> approvedWalletModels = [];
   var approvedWalletModels = <WalletModel>[];
@@ -45,7 +47,7 @@ class _MyMoneyBuyerState extends State<MyMoneyBuyer> {
     // TODO: implement initState
     super.initState();
     readAllWallet();
-    setUpBottonBar();
+    setUpBottomBar();
   }
 
   Future<Null> readAllWallet() async {
@@ -57,41 +59,56 @@ class _MyMoneyBuyerState extends State<MyMoneyBuyer> {
     await Dio().get(path).then((value) {
       print(value);
 
-      for (var item in json.decode(value.data)) {
-        WalletModel model = WalletModel.fromMap(item);
-        switch (model.status) {
-          case 'Approved':
-            approvedWallet = approvedWallet + int.parse(model.money);
-            approvedWalletModels.add(model);
-            break;
+      if (value.toString() != 'null') {
+        for (var item in json.decode(value.data)) {
+          WalletModel model = WalletModel.fromMap(item);
+          switch (model.status) {
+            case 'Approved':
+              approvedWallet = approvedWallet + int.parse(model.money);
+              approvedWalletModels.add(model);
+              break;
 
-          case 'WaitOrder':
-            waitApproveWallet = waitApproveWallet + int.parse(model.money);
-            waitWalletModels.add(model);
-            break;
-          default:
-            break;
+            case 'WaitOrder':
+              waitApproveWallet = waitApproveWallet + int.parse(model.money);
+              waitWalletModels.add(model);
+              break;
+            default:
+              break;
+          }
         }
+        // print('approvedWallet ==> $approvedWallet');
+        // print('waitApproveWallet ==> $waitApproveWallet');
+
+        widgets.add(
+          Wallet(
+              approveWallet: approvedWallet,
+              waitApproveWallet: waitApproveWallet),
+        );
+        widgets.add(
+          Approved(
+            walletModels: approvedWalletModels,
+          ),
+        );
+        widgets.add(
+          Waiting(
+            walletModels: waitWalletModels,
+          ),
+        );
+        setState(() {
+          load = false;
+          haveWallet = true;
+        });
+      } else {
+        print('No wallet status');
+        setState(() {
+          load = false;
+          haveWallet = false;
+        });
       }
-      // print('approvedWallet ==> $approvedWallet');
-      // print('waitApproveWallet ==> $waitApproveWallet');
-
-      widgets.add(Wallet(
-          approveWallet: approvedWallet, waitApproveWallet: waitApproveWallet));
-      widgets.add(Approved(
-        walletModels: approvedWalletModels,
-      ));
-      widgets.add(Waiting(
-        walletModels: waitWalletModels,
-      ));
-
-      setState(() {
-        load = false;
-      });
     });
   }
 
-  void setUpBottonBar() {
+  void setUpBottomBar() {
     int index = 0;
     for (var title in titles) {
       bottomNavigationBarItems.add(
@@ -109,7 +126,14 @@ class _MyMoneyBuyerState extends State<MyMoneyBuyer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: load ? ShowProgress() : widgets[indexWidget],
+      body: load
+          ? ShowProgress()
+          : haveWallet!
+              ? widgets[indexWidget]
+              : ShowNoData(
+                  title: 'There is no Wallet',
+                  pathImage: MyConstant.image1,
+                ),
       bottomNavigationBar: BottomNavigationBar(
         unselectedItemColor: MyConstant.light,
         selectedItemColor: MyConstant.dark,
