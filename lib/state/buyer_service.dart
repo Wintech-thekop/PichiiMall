@@ -10,6 +10,7 @@ import 'package:pichiimall/bodys/my_order_buyer.dart';
 import 'package:pichiimall/bodys/show_all_shop_buyer.dart';
 import 'package:pichiimall/state/show_cart.dart';
 import 'package:pichiimall/utility/my_constant.dart';
+import 'package:pichiimall/utility/my_dialog.dart';
 import 'package:pichiimall/widgets/show_image.dart';
 import 'package:pichiimall/widgets/show_progress.dart';
 import 'package:pichiimall/widgets/show_signout.dart';
@@ -47,13 +48,28 @@ class _BuyerServiceState extends State<BuyerService> {
     var urlAPI =
         '${MyConstant.domain}/pichiimall/getUserWhereId.php?isAdd=true&id=$idUserLogin';
     // print(idUserLogin);
-    await Dio().get(urlAPI).then((value) {
+    await Dio().get(urlAPI).then((value) async {
       for (var item in json.decode(value.data)) {
         // print(item);
         setState(() {
           userModel = UserModel.fromMap(item);
         });
       }
+
+      var path =
+          "${MyConstant.domain}/pichiimall/getWalletWhereIdBuyer.php?isAdd=true&idBuyer=${userModel!.id}";
+      await Dio().get(path).then((value) {
+        // print('value get Wallet Where Id ==> $value');
+
+        if (value.toString() == 'null') {
+          MyDialog(
+            funcAction: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, MyConstant.routeAddWallet);
+            },
+          ).actionDialog(context, 'No Wallet', 'Please Add Wallet');
+        }
+      });
     });
   }
 
